@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get_it/get_it.dart';
 import 'package:nursery/services/auth_store.dart';
+import 'package:nursery/services/firebase_auth_service.dart';
+import 'package:nursery/services/firestore_service.dart';
 import 'package:nursery/ui/home/home_page.dart';
 import 'package:nursery/ui/login-sign-up/log_in_sign_up_provider.dart';
 import 'package:nursery/utils/buttons.dart';
@@ -39,8 +41,10 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) =>
-            LoginSignupProvider(authStore: GetIt.I<AuthStore>()),
+        create: (context) => LoginSignupProvider(
+            authStore: GetIt.I<AuthStore>(),
+            authService: GetIt.I<FirebaseAuthService>(),
+            firestoreService: GetIt.I<FirestoreService>()),
         builder: (context, snapshot) {
           LoginSignupProvider provider = context.watch();
           return Scaffold(

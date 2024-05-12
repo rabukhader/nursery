@@ -27,6 +27,10 @@ dependencies:
   loading_animation_widget: ^1.2.1
   firebase_core: ^2.30.1
   firebase_auth: ^4.19.4
+  uuid: ^4.4.0
+  multi_image_picker_plus: ^0.0.4
+  image_picker: ^1.1.1
+  firebase_storage: ^11.7.5
 
 dev_dependencies:
   flutter_test:

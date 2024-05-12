@@ -5,6 +5,7 @@ const kProfileMale = "assets/icons/profileMale.svg";
 const kProfileFemale = "assets/icons/profileFemale.svg";
 const kNurseryDashboard = 'assets/icons/nursery-dashboard.svg';
 const kNoNurses = 'assets/icons/no-nurses.svg';
+const kAlternateNurse = 'assets/icons/alternate_nurse.svg';
 
 
 /*---------------------------------- Pngs -------------------------*/

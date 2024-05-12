@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:nursery/services/auth_store.dart';
-import 'package:nursery/services/firebase_service.dart';
+import 'package:nursery/services/firebase_auth_service.dart';
 import 'package:nursery/ui/home/profile/profile_page_provider.dart';
 import 'package:nursery/ui/login-sign-up/log_in_sign_up_page.dart';
 import 'package:nursery/utils/colors.dart';
@@ -19,7 +19,7 @@ class ProfilePage extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (_) => ProfilePageProvider(
             authStore: GetIt.I<AuthStore>(),
-            firebase: GetIt.I<FirebaseService>()),
+            authService: GetIt.I<FirebaseAuthService>()),
         builder: (context, snapshot) {
           ProfilePageProvider provider = context.watch();
           return provider.isLoading
