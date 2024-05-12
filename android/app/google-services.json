@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "428006679025",
+    "project_id": "nursery-f60a1",
+    "storage_bucket": "nursery-f60a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428006679025:android:d972eed04bad5bcae9a450",
+        "android_client_info": {
+          "package_name": "com.example.nursery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxVvKVi05OUGP4AUcYlS-TW4u1nF2IIWs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
