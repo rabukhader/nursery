@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
-import 'package:nursery/services/firebase_service.dart';
+import 'package:nursery/services/firebase_auth_service.dart';
 
 class ProfilePageProvider extends ChangeNotifier {
   final AuthStore authStore;
-  final FirebaseService firebase;
+  final FirebaseAuthService authService;
 
   User? userData;
 
@@ -13,7 +13,7 @@ class ProfilePageProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  ProfilePageProvider({required this.authStore, required this.firebase}) {
+  ProfilePageProvider({required this.authStore, required this.authService}) {
     init();
   }
 

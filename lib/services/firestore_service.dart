@@ -1,0 +1,40 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nursery/model/nurse.dart';
+import 'package:nursery/model/user.dart';
+
+class FirestoreService {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirestoreService();
+
+  Future<Map<String, dynamic>> getUserData({required String id}) async {
+    DocumentReference userDocRef = firestore.collection('user').doc(id);
+    DocumentSnapshot documentSnapshot = await userDocRef.get();
+    Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+    return data;
+  }
+
+  Future addUser({required User user}) async {
+    CollectionReference userCollectionRef = firestore.collection('user');
+    await userCollectionRef.doc(user.id).set({
+      "userNumber": user.userNumber,
+      "gender": user.gender,
+      "fullname": user.fullname
+    });
+  }
+
+  Future<List<Nurse>> getNurses() async {
+    List<Nurse> nurseList = [];
+
+    QuerySnapshot querySnapshot = await firestore.collection('nurses').get();
+    querySnapshot.docs.forEach((document) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      nurseList.add(Nurse.fromJson(data));
+    });
+
+    return nurseList;
+  }
+
+  Future addNurse(Nurse nurse) async {
+    await firestore.collection('nurses').add(nurse.toJson());
+  }
+}

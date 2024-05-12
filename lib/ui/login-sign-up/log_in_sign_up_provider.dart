@@ -1,13 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nursery/model/user.dart' as cuser;
 import 'package:nursery/services/auth_store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:nursery/services/firebase_auth_service.dart';
+import 'package:nursery/services/firestore_service.dart';
 
 class LoginSignupProvider extends ChangeNotifier {
   final AuthStore authStore;
+  final FirebaseAuthService authService;
+  final FirestoreService firestoreService;
 
-  LoginSignupProvider({required this.authStore});
+  LoginSignupProvider(
+      {required this.authStore,
+      required this.authService,
+      required this.firestoreService});
 
   bool _isLoggingIn = false;
 
@@ -17,8 +23,8 @@ class LoginSignupProvider extends ChangeNotifier {
     try {
       _isLoggingIn = true;
       notifyListeners();
-      UserCredential user = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+      UserCredential user =
+          await authService.login(email: email, password: password);
       await _saveInfoOnAuthStoreAfterLogin(
           user.user?.uid ?? "", email, password);
       return "pass";
@@ -44,10 +50,7 @@ class LoginSignupProvider extends ChangeNotifier {
       _isLoggingIn = true;
       notifyListeners();
       UserCredential user =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+          await authService.signUp(email: email, password: password);
       await addUserOnFirebase(cuser.User(
           email: email,
           password: password,
@@ -56,8 +59,13 @@ class LoginSignupProvider extends ChangeNotifier {
           gender: gender,
           id: user.user?.uid ?? ""));
 
-      await _saveInfoOnAuthStoreAfterLogin(
-          user.user?.uid ?? "", email, password);
+      await _saveInfoOnAuthStoreAfterSignUp(cuser.User(
+          id: user.user!.uid,
+          email: email,
+          password: password,
+          userNumber: userNumber,
+          gender: gender,
+          fullname: fullname));
       return "pass";
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -77,20 +85,15 @@ class LoginSignupProvider extends ChangeNotifier {
   }
 
   addUserOnFirebase(cuser.User user) async {
-    CollectionReference userCollectionRef =
-        FirebaseFirestore.instance.collection('user');
-    await userCollectionRef.doc(user.id).set({
-      "userNumber": user.userNumber,
-      "gender": user.gender,
-      "fullname": user.fullname
-    });
+    await firestoreService.addUser(user: user);
+  }
+
+  _saveInfoOnAuthStoreAfterSignUp(cuser.User user) async {
+    await authStore.saveUser(user);
   }
 
   _saveInfoOnAuthStoreAfterLogin(id, email, password) async {
-    DocumentReference userDocRef =
-        FirebaseFirestore.instance.collection('user').doc(id);
-    DocumentSnapshot documentSnapshot = await userDocRef.get();
-    Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+    Map<String, dynamic> data = await firestoreService.getUserData(id: id);
 
     await authStore.saveUser(cuser.User(
         fullname: data['fullname'],
