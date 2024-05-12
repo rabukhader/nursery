@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get_it/get_it.dart';
+import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
 import 'package:nursery/services/firebase_auth_service.dart';
 import 'package:nursery/services/firestore_service.dart';
@@ -158,7 +159,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
                                                     _email.text,
                                                     _password.text);
                                             if (result == "pass") {
-                                              manageNavigation();
+                                              manageNavigation(_email.text);
                                             } else {
                                               ErrorUtils.showGeneralError(
                                                   context, result);
@@ -173,7 +174,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
                                                     int.parse(_phone.text),
                                                     getGender());
                                             if (result == "pass") {
-                                              manageNavigation();
+                                              manageNavigation(_email.text);
                                             } else {
                                               ErrorUtils.showGeneralError(
                                                   context, result);
@@ -431,9 +432,14 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     );
   }
 
-  void manageNavigation() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const HomePage()));
+  void manageNavigation(String email) {
+    if(email.contains('nursery')) {
+      Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const HomePage(userType: UserType.nursery,)));
+    } else {
+       Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const HomePage(userType: UserType.parents,)));
+    }
   }
 
   bool _validateInput() {

@@ -67,7 +67,13 @@ class _SplashScreenState extends State<SplashScreen> {
   _onSplashCompleted() async {
     User? user = await GetIt.I<AuthStore>().getUser();
     if (user != null) {
-      manageNavigation(user.email);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomePage(
+                    userType: user.type,
+                  )),
+          (route) => false);
     } else {
       Navigator.pushAndRemoveUntil(
           context,
@@ -75,12 +81,5 @@ class _SplashScreenState extends State<SplashScreen> {
               builder: (c) => const LoginSignUpPage(isLogIn: true)),
           (route) => false);
     }
-  }
-
-  void manageNavigation(String email) {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-        (route) => false);
   }
 }

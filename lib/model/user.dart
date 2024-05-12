@@ -15,14 +15,23 @@ class User {
   String? gender;
   String? fullname;
 
+  bool get isNursery => email.contains("nursery");
+
+  UserType get type {
+    if (isNursery) {
+      return UserType.nursery;
+    } else {
+      return UserType.parents;
+    }
+  }
+
   factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json['id'],
-        email: json['email'],
-        password: json['password'],
-        userNumber: json['userNumber'],
-        gender: json['gender'],
-        fullname: json['fullname']
-      );
+      id: json['id'],
+      email: json['email'],
+      password: json['password'],
+      userNumber: json['userNumber'],
+      gender: json['gender'],
+      fullname: json['fullname']);
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -33,3 +42,5 @@ class User {
         'fullname': fullname,
       };
 }
+
+enum UserType { nursery, parents }
