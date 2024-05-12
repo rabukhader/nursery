@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
 import 'package:nursery/ui/home/home_page_provider.dart';
 import 'package:nursery/ui/home/nursery_dashboard/nursery_dashboard.dart';
 import 'package:nursery/ui/home/profile/profile_page.dart';
+import 'package:nursery/ui/parent_dashboard/parent_dashboard.dart';
 import 'package:nursery/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final UserType userType;
+  const HomePage({super.key, required this.userType});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -52,7 +55,10 @@ class _HomePageState extends State<HomePage> {
   _buildScreenAt(BuildContext context, int index) {
     switch (index) {
       case 0:
-        return const NurseryDashboard();
+        if(widget.userType == UserType.nursery)
+        {return const NurseryDashboard();}else {
+          return const ParentDashboard();
+        }
       case 1:
         return const ProfilePage();
     }

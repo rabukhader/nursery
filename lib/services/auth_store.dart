@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:nursery/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class AuthStore {
   AuthStore();
 
@@ -24,4 +23,8 @@ class AuthStore {
     return null;
   }
 
+  Future logout() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.clear();
+  }
 }

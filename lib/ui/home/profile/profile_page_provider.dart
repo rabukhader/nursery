@@ -34,5 +34,8 @@ class ProfilePageProvider extends ChangeNotifier {
     }
   }
 
-  logOut() {}
+  Future logOut()async {
+    await authService.logout();
+    await authStore.logout();
+  }
 }
