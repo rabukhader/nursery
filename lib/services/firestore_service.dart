@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nursery/model/baby.dart';
 import 'package:nursery/model/nurse.dart';
+import 'package:nursery/model/room.dart';
 import 'package:nursery/model/user.dart';
 
 class FirestoreService {
@@ -78,4 +79,9 @@ class FirestoreService {
       return null;
     }
   }
+
+  Future<List<Room>?> getRooms() async{
+
+  }
+
 }
