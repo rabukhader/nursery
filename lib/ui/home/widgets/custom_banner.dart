@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nursery/utils/colors.dart';
 
 class CustomBanner extends StatelessWidget {
@@ -28,7 +29,7 @@ class CustomBanner extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: kPrimaryColor,
+            color: kLightOrangeColor,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -41,7 +42,7 @@ class CustomBanner extends StatelessWidget {
                     bottom: 16,
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         title,
@@ -49,18 +50,19 @@ class CustomBanner extends StatelessWidget {
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          color: kWhiteColor,
+                          color: Colors.blue,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           
                         ),
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             subTitle,
                             style: const TextStyle(
-                          color: kWhiteColor,
+                          color: Colors.blue,
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                             ),
@@ -71,10 +73,10 @@ class CustomBanner extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              SvgPicture.asset(
                 width: 90,
                 height: 80,
-                child: Image.asset(image),
+                image,
               ),
             ],
           ),

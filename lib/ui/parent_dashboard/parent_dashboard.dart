@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:nursery/model/baby.dart';
+import 'package:nursery/services/auth_store.dart';
+import 'package:nursery/services/firestore_service.dart';
+import 'package:nursery/ui/home/forms/add_baby_form.dart';
 import 'package:nursery/ui/home/widgets/add_new_card.dart';
-import 'package:nursery/ui/home/widgets/custom_banner.dart';
 import 'package:nursery/ui/home/widgets/empty_alternate.dart';
 import 'package:nursery/ui/home/widgets/list_header.dart';
 import 'package:nursery/ui/home/widgets/loader.dart';
@@ -18,15 +21,20 @@ class ParentDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => ParentDashboardProvider(),
+        create: (context) => ParentDashboardProvider(
+            GetIt.I<FirestoreService>(), GetIt.I<AuthStore>()),
         builder: (context, snapshot) {
           ParentDashboardProvider provider = context.watch();
           return SingleChildScrollView(
             child: Column(children: [
-              const CustomBanner(
-                image: kLogoIcon,
-                title: "Nursery",
-                subTitle: 'Test Test',
+              Center(
+                child: SvgPicture.asset(
+                  kNurseryDashboard,
+                  height: 200,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
               ),
               const ListHeader(header: "My Babies"),
               provider.isLoadingBabies
@@ -44,24 +52,37 @@ class ParentDashboard extends StatelessWidget {
                             if (index == 0) {
                               return AddNewCard(
                                 title: "Add new baby",
-                                onAddNew: () {},
+                                onAddNew: () async {
+                              Baby? baby =
+                                  await AddNewBabyForm.show(context: context);
+                              if (baby != null) {
+                                await provider.addBaby(baby);
+                              }
+                            }
                               );
                             } else {
                               return BabyCard(
-                                baby: provider.babies![index], onPressed: () {  },
+                                baby: provider.babies![index],
+                                onPressed: () {},
                               );
                             }
                           },
                         )
                       : EmptyAlternate(
-                          text: "No Nurses",
+                          text: "No Babies",
                           image: SvgPicture.asset(
                             kNoNurses,
                             height: 250,
                           ),
                           forRefill: QPrimaryButton(
                             label: "Add New Baby",
-                            onPressed: () async {},
+                            onPressed: () async {
+                              Baby? baby =
+                                  await AddNewBabyForm.show(context: context);
+                              if (baby != null) {
+                                await provider.addBaby(baby);
+                              }
+                            },
                           ),
                         )
             ]),
@@ -77,8 +98,7 @@ class BabyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-      GestureDetector(
+    return GestureDetector(
       onTap: onPressed,
       child: Card(
         elevation: 16,
@@ -89,7 +109,12 @@ class BabyCard extends StatelessWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [FallbackImageHandler(image: baby.image,localSvgAlternate: kAternateBay, )],
+                children: [
+                  FallbackImageHandler(
+                    image: baby.image,
+                    localSvgAlternate: kAternateBay,
+                  )
+                ],
               ),
               Column(
                 children: [

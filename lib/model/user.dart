@@ -1,3 +1,5 @@
+import 'package:nursery/model/baby.dart';
+
 class User {
   User({
     required this.id,
@@ -6,6 +8,7 @@ class User {
     required this.userNumber,
     required this.gender,
     required this.fullname,
+    this.babies
   });
 
   final String id;
@@ -14,6 +17,7 @@ class User {
   int? userNumber;
   String? gender;
   String? fullname;
+  List<Baby>? babies;
 
   bool get isNursery => email.contains("nursery");
 
@@ -31,7 +35,9 @@ class User {
       password: json['password'],
       userNumber: json['userNumber'],
       gender: json['gender'],
-      fullname: json['fullname']);
+      fullname: json['fullname'],
+      babies: json['babies']?.map((e) => Baby.fromJson(e)).toList()
+      );
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -40,6 +46,7 @@ class User {
         'userNumber': userNumber,
         'gender': gender,
         'fullname': fullname,
+        'babies': babies
       };
 }
 
