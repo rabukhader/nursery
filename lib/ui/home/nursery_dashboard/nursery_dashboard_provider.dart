@@ -15,6 +15,10 @@ class NurseryDashboardProvider extends ChangeNotifier {
     init();
   }
 
+  bool _isSaving = false;
+
+  bool get isSaving => _isSaving;
+
   void init() async {
     await getNurses();
   }
@@ -40,6 +44,23 @@ class NurseryDashboardProvider extends ChangeNotifier {
       _isLoading = true;
       notifyListeners();
       firestore.addNurse(nurse);
+    } catch (e) {
+      print(e);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future deleteNurse(String nurseId) async {
+    await firestore.deleteNurse(nurseId: nurseId);
+  }
+
+  Future updateNurseData(Nurse nurse) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+      firestore.updateNurseData(nurse: nurse);
     } catch (e) {
       print(e);
     } finally {

@@ -29,6 +29,7 @@ class FirestoreService {
     querySnapshot.docs.forEach((document) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
       nurseList.add(Nurse.fromJson(data));
+      print(nurseList);
     });
 
     return nurseList;
@@ -36,5 +37,25 @@ class FirestoreService {
 
   Future addNurse(Nurse nurse) async {
     await firestore.collection('nurses').add(nurse.toJson());
+  }
+
+  Future deleteNurse({required String nurseId}) async {
+    QuerySnapshot querySnapshot = await firestore
+        .collection('nurses')
+        .where('id', isEqualTo: nurseId)
+        .get();
+    querySnapshot.docs.forEach((document) async {
+      await document.reference.delete();
+    });
+  }
+
+  Future updateNurseData({required Nurse nurse}) async {
+    QuerySnapshot querySnapshot = await firestore
+        .collection('nurses')
+        .where('id', isEqualTo: nurse.id)
+        .get();
+    querySnapshot.docs.forEach((document) async {
+      await document.reference.update(nurse.toJson());
+    });
   }
 }

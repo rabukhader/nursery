@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:nursery/model/nurse.dart';
 import 'package:nursery/services/firestore_service.dart';
 import 'package:nursery/ui/home/forms/add_nurse_form.dart';
+import 'package:nursery/ui/home/nurse_view_page/nurse_view.dart';
 import 'package:nursery/ui/home/nursery_dashboard/nursery_dashboard_provider.dart';
+import 'package:nursery/ui/home/widgets/add_new_card.dart';
 import 'package:nursery/ui/home/widgets/list_header.dart';
 import 'package:nursery/ui/home/widgets/empty_alternate.dart';
 import 'package:nursery/utils/buttons.dart';
-import 'package:nursery/utils/colors.dart';
 import 'package:nursery/utils/icons.dart';
 import 'package:nursery/ui/home/widgets/loader.dart';
 import 'package:nursery/ui/home/widgets/nurse_card.dart';
@@ -59,7 +59,8 @@ class NurseryDashboard extends StatelessWidget {
                                           childAspectRatio: 1),
                                   itemBuilder: (context, index) {
                                     if (index == 0) {
-                                      return AddNewNurseCard(
+                                      return AddNewCard(
+                                        title: "Add New Nurse",
                                         onAddNew: () async {
                                           Nurse? nurse =
                                               await AddNewNurseForm.show(
@@ -71,7 +72,31 @@ class NurseryDashboard extends StatelessWidget {
                                       );
                                     } else {
                                       return NurseCard(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) => NurseViewPage(
+                                                        isSaving:
+                                                            provider.isSaving,
+                                                        nurse: provider
+                                                            .nurses![index],
+                                                        onDelete: () async {
+                                                          await provider
+                                                              .deleteNurse(
+                                                                  provider
+                                                                      .nurses![
+                                                                          index]
+                                                                      .id);
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        onSave: () async {
+                                                          // await provider
+                                                          //     .updateNurseData();
+                                                        },
+                                                      )));
+                                        },
                                         nurse: provider.nurses![index],
                                       );
                                     }
@@ -88,9 +113,9 @@ class NurseryDashboard extends StatelessWidget {
                                     onPressed: () async {
                                       Nurse? nurse = await AddNewNurseForm.show(
                                           context: context);
-                                          if(nurse != null) {
-                                            await provider.addNurse(nurse);
-                                          }
+                                      if (nurse != null) {
+                                        await provider.addNurse(nurse);
+                                      }
                                     },
                                   ),
                                 )
@@ -101,42 +126,5 @@ class NurseryDashboard extends StatelessWidget {
             ],
           );
         });
-  }
-}
-
-class AddNewNurseCard extends StatelessWidget {
-  final VoidCallback onAddNew;
-  const AddNewNurseCard({super.key, required this.onAddNew});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 16,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () {
-                onAddNew();
-              },
-              child: ClipOval(
-                child: Container(
-                    padding: const EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: kPrimaryColor, width: 2.0)),
-                    child: const Icon(Icons.add)),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text("Add New Nurse")
-          ],
-        ),
-      ),
-    );
   }
 }
