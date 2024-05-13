@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nursery/model/baby.dart';
 import 'package:nursery/model/nurse.dart';
 import 'package:nursery/model/user.dart';
 
@@ -57,5 +58,24 @@ class FirestoreService {
     querySnapshot.docs.forEach((document) async {
       await document.reference.update(nurse.toJson());
     });
+  }
+
+  Future addBaby({required Baby baby, required String userId}) async {
+    firestore.collection('user').doc(userId).update(baby.toJson());
+  }
+
+  Future<List<Baby>?> getBabies({required String userId}) async {
+    DocumentSnapshot userSnapshot =
+        await firestore.collection('user').doc(userId).get();
+
+    var userData = userSnapshot.data() as Map<String, dynamic>;
+    print(userData);
+    if (userData['babies'] != null) {
+      var babiesData = userData['babies'] as List<dynamic>;
+      print(babiesData);
+      return babiesData.map((babyJson) => Baby.fromJson(babyJson)).toList();
+    } else {
+      return null;
+    }
   }
 }
