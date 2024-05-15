@@ -19,14 +19,12 @@ class AddNewCard extends StatelessWidget {
               onTap: () {
                 onAddNew();
               },
-              child: ClipOval(
-                child: Container(
-                    padding: const EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: kPrimaryColor, width: 2.0)),
-                    child: const Icon(Icons.add)),
-              ),
+              child: Container(
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(color: kPrimaryColor, width: 2.0)),
+                  child: const Icon(Icons.add)),
             ),
             const SizedBox(
               height: 20,

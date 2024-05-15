@@ -7,7 +7,7 @@ import 'package:nursery/ui/home/home_page_provider.dart';
 import 'package:nursery/ui/home/nursery_dashboard/nursery_dashboard.dart';
 import 'package:nursery/ui/home/nursery_rooms/nursey_rooms.dart';
 import 'package:nursery/ui/home/profile/profile_page.dart';
-import 'package:nursery/ui/parent_dashboard/parent_dashboard.dart';
+import 'package:nursery/ui/home/parent_dashboard/parent_dashboard.dart';
 import 'package:nursery/utils/colors.dart';
 import 'package:provider/provider.dart';
 

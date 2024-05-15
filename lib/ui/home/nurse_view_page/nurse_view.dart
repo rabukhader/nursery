@@ -75,7 +75,7 @@ class NurseViewPage extends StatelessWidget {
                   ),
                   const ListHeader(header: "Feedback"),
                   ...nurse.feedback!.map((e) => Container(
-                      margin: EdgeInsets.only(left: 22), child: Text(e)))
+                      margin: const EdgeInsets.only(left: 22), child: Text(e)))
                 ],
               )
           ],

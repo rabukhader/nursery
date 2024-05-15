@@ -38,7 +38,5 @@ class ThemeProvider with ChangeNotifier {
   ThemeData darkTheme(context) => Style.defaultTheme(context);
 
   /// Load theme information from local storage
-  Future<void> init() async {
-    //TODO
-  }
+  Future<void> init() async {}
 }

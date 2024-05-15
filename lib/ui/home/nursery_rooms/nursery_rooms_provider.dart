@@ -8,17 +8,17 @@ class NurseryRoomsProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  List<Room>? rooms;
+  List<Room>? bookedRooms;
 
-  NurseryRoomsProvider(this.firestore){
+  NurseryRoomsProvider(this.firestore) {
     loadData();
   }
-  
+
   loadData() async {
-     try {
+    try {
       _isLoading = true;
       notifyListeners();
-      rooms = await firestore.getRooms();
+      bookedRooms = await firestore.getBookedRooms();
     } catch (e) {
       print(e);
     } finally {
@@ -26,4 +26,10 @@ class NurseryRoomsProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+
+  bookRoom() async {
+
+  }
+
 }
