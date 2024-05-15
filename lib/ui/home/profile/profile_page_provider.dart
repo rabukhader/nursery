@@ -13,6 +13,10 @@ class ProfilePageProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  bool _isUpdating = false;
+
+  bool get isUpdating => _isUpdating;
+
   ProfilePageProvider({required this.authStore, required this.authService}) {
     init();
   }
@@ -34,8 +38,25 @@ class ProfilePageProvider extends ChangeNotifier {
     }
   }
 
-  Future logOut()async {
+  Future logOut() async {
     await authService.logout();
     await authStore.logout();
+  }
+
+  Future<void> updateUser({
+    String? fullname,
+    String? gender,
+    int? userNumber
+  }) async {
+    try {
+      _isUpdating = true;
+      notifyListeners();
+      
+    } catch (e) {
+      print(e);
+    } finally {
+      _isUpdating = false;
+      notifyListeners();
+    }
   }
 }

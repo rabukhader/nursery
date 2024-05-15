@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:nursery/services/auth_store.dart';
 import 'package:nursery/services/firebase_auth_service.dart';
+import 'package:nursery/ui/home/profile/edit_profile.dart';
 import 'package:nursery/ui/home/profile/profile_page_provider.dart';
 import 'package:nursery/ui/login-sign-up/log_in_sign_up_page.dart';
 import 'package:nursery/utils/colors.dart';
@@ -70,7 +71,17 @@ class ProfilePage extends StatelessWidget {
                         SizedBox(
                           width: 200,
                           child: ElevatedButton(
-                            onPressed: () async {},
+                            onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditProfile(
+                                        onUpdate: provider.updateUser,
+                                        isUpdating: provider.isUpdating,
+                                          user: provider.userData)));
+
+                                    await provider.init();
+                            },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: kPrimaryColor,
                                 side: BorderSide.none,
@@ -84,14 +95,9 @@ class ProfilePage extends StatelessWidget {
                         const SizedBox(height: 10),
 
                         ProfileMenuWidget(
-                            title: "Car Information",
-                            icon: LineAwesomeIcons.car,
-                            onPress: () async {}),
-                        const SizedBox(height: 10),
-                        ProfileMenuWidget(
                             title: "Logout",
                             icon: LineAwesomeIcons.alternate_sign_out,
-                            textColor: Colors.red,
+                            textColor: kPrimaryColor,
                             endIcon: false,
                             onPress: () async {
                               await provider.logOut();

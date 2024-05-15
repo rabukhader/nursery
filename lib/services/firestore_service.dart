@@ -104,7 +104,6 @@ class FirestoreService {
 
       // Fetching the referenced user document
       DocumentSnapshot userSnapshot = await userRef.get();
-      var userData = userSnapshot.data() as Map<String, dynamic>;
 
       // Fetching the referenced room document
       DocumentSnapshot roomSnapshot = await roomRef.get();
@@ -112,7 +111,9 @@ class FirestoreService {
 
       // Assuming getBabies() is a function that fetches babies
       List<Baby>? babies = await getBabies(userId: userSnapshot.id);
-      Baby? baby = (babies != null && babies.isNotEmpty) ? babies.first : null;
+      Baby? baby = (babies != null && babies.isNotEmpty)
+          ? babies.where((element) => element.id == data['babyId']).first
+          : null;
 
       roomsList.add(
         Room(

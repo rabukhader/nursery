@@ -2,12 +2,13 @@ import 'package:nursery/model/baby.dart';
 import 'package:nursery/utils/formatter.dart';
 
 class Room {
-  Room({required this.id, this.parentId, this.baby, this.bookingDate});
+  Room({required this.id, this.parentId, this.baby, this.bookingDate, this.babyId});
 
   final String id;
   final String? parentId;
   Baby? baby;
   DateTime? bookingDate;
+  final String? babyId;
 
   bool get isEmpty => baby == null;
 
@@ -15,6 +16,7 @@ class Room {
       id: json['id'],
       baby: json['baby'] != null ? Baby.fromJson(json['baby']) : null,
       parentId: json['parentId'],
+      babyId: json['babyId'],
       bookingDate: json['bookingDate'] != null
           ? Formatter.convertTimestampToDateTime(json['bookingDate'])
           : null);
@@ -23,6 +25,7 @@ class Room {
         'id': id,
         if (baby != null) 'baby': baby!.toJson(),
         'parentId': parentId,
+        'babyId':babyId,
         if (bookingDate != null)
           'bookingDate':
               Formatter.convertStringToTimestamp(bookingDate.toString())

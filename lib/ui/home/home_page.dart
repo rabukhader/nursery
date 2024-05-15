@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
-import 'package:nursery/ui/home/book_room/book_room.dart';
+import 'package:nursery/ui/home/book_room_parent/book_room.dart';
 import 'package:nursery/ui/home/home_page_provider.dart';
 import 'package:nursery/ui/home/nursery_dashboard/nursery_dashboard.dart';
 import 'package:nursery/ui/home/nursery_rooms/nursey_rooms.dart';
