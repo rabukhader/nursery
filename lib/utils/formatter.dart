@@ -30,4 +30,19 @@ class Formatter {
     return timestamp.toDate();
   }
 
+  static Timestamp convertStringToTimestamp(String dateString) {
+  try {
+    // Define the format of your input string
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+    // Parse the string into a DateTime object
+    DateTime dateTime = dateFormat.parse(dateString);
+    // Convert the DateTime object to a Timestamp
+    Timestamp timestamp = Timestamp.fromDate(dateTime);
+    return timestamp;
+  } catch (e) {
+    print("Error parsing date string: $e");
+    return Timestamp.now(); // return current time if parsing fails
+  }
+}
+
 }

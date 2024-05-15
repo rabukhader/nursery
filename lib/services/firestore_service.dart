@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nursery/model/baby.dart';
 import 'package:nursery/model/nurse.dart';
+import 'package:nursery/model/room.dart';
 import 'package:nursery/model/user.dart';
+import 'package:nursery/utils/formatter.dart';
 
 class FirestoreService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -30,7 +32,6 @@ class FirestoreService {
     querySnapshot.docs.forEach((document) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
       nurseList.add(Nurse.fromJson(data));
-      print(nurseList);
     });
 
     return nurseList;
@@ -69,13 +70,61 @@ class FirestoreService {
         await firestore.collection('user').doc(userId).get();
 
     var userData = userSnapshot.data() as Map<String, dynamic>;
-    print(userData);
     if (userData['babies'] != null) {
       var babiesData = userData['babies'] as List<dynamic>;
-      print(babiesData);
       return babiesData.map((babyJson) => Baby.fromJson(babyJson)).toList();
     } else {
       return null;
     }
+  }
+
+  Future<List<Room>?> getRooms() async {
+    List<Room> roomsList = [];
+
+    QuerySnapshot querySnapshot = await firestore.collection('rooms').get();
+    querySnapshot.docs.forEach((document) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      roomsList.add(Room.fromJson(data));
+    });
+
+    return roomsList;
+  }
+
+  Future<List<Room>?> getBookedRooms() async {
+    List<Room> roomsList = [];
+
+    QuerySnapshot querySnapshot =
+        await firestore.collection('booked_rooms').get();
+    for (var document in querySnapshot.docs) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+      // Extracting userRef and roomRef
+      DocumentReference userRef = data['parentId'];
+      DocumentReference roomRef = data['roomId'];
+
+      // Fetching the referenced user document
+      DocumentSnapshot userSnapshot = await userRef.get();
+
+      // Fetching the referenced room document
+      DocumentSnapshot roomSnapshot = await roomRef.get();
+      var roomData = roomSnapshot.data() as Map<String, dynamic>;
+
+      // Assuming getBabies() is a function that fetches babies
+      List<Baby>? babies = await getBabies(userId: userSnapshot.id);
+      Baby? baby = (babies != null && babies.isNotEmpty)
+          ? babies.where((element) => element.id == data['babyId']).first
+          : null;
+
+      roomsList.add(
+        Room(
+            id: roomData['id'],
+            parentId: userSnapshot.id,
+            baby: baby,
+            bookingDate:
+                Formatter.convertTimestampToDateTime(data['bookingDate'])),
+      );
+    }
+
+    return roomsList;
   }
 }

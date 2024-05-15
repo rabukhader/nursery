@@ -9,7 +9,7 @@ import 'package:nursery/ui/home/widgets/add_new_card.dart';
 import 'package:nursery/ui/home/widgets/empty_alternate.dart';
 import 'package:nursery/ui/home/widgets/list_header.dart';
 import 'package:nursery/ui/home/widgets/loader.dart';
-import 'package:nursery/ui/parent_dashboard/parent_dashboard_provider.dart';
+import 'package:nursery/ui/home/parent_dashboard/parent_dashboard_provider.dart';
 import 'package:nursery/utils/buttons.dart';
 import 'package:nursery/utils/fallback_image_handler.dart';
 import 'package:nursery/utils/icons.dart';
