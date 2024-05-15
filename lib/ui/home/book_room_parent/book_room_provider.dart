@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:nursery/model/baby.dart';
 import 'package:nursery/model/room.dart';
+import 'package:nursery/model/user.dart';
+import 'package:nursery/services/auth_store.dart';
 import 'package:nursery/services/firestore_service.dart';
 
 class BookRoomprovider extends ChangeNotifier {
@@ -15,6 +18,19 @@ class BookRoomprovider extends ChangeNotifier {
 
   List<Baby>? babies;
 
+  List<Baby> getavailableBabies() {
+    // Extract the IDs of babies in booked rooms
+    Set<String> bookedBabyIds =
+        (bookedRooms ?? []).map((room) => room.baby!.id).toSet();
+
+    // Filter out babies whose IDs are in bookedBabyIds
+    List<Baby> availableBabies = (babies ?? [])
+        .where((baby) => !bookedBabyIds.contains(baby.id))
+        .toList();
+
+    return availableBabies;
+  }
+
   BookRoomprovider(this.firestore) {
     loadData();
   }
@@ -24,7 +40,7 @@ class BookRoomprovider extends ChangeNotifier {
       _isLoading = true;
       notifyListeners();
       rooms = await firestore.getRooms();
-      bookedRooms = await firestore.getBookedRooms();
+      bookedRooms = await getBookedRooms();
       babies = await getUserBabies();
     } catch (e) {
       print(e);
@@ -34,13 +50,17 @@ class BookRoomprovider extends ChangeNotifier {
     }
   }
 
-  bookRoom(roomId , babyId) async {
-    
+  getBookedRooms() async {
+    User? user = await GetIt.I<AuthStore>().getUser();
+    if (user == null) return [];
+    return await firestore.getBookedRooms(parentId: user.id);
   }
-  
+
+  bookRoom(roomId, babyId) async {}
+
   getUserBabies() async {
-    return await firestore.getBabies(userId: userId);
+    User? user = await GetIt.I<AuthStore>().getUser();
+    if (user == null) return [];
+    return await firestore.getBabies(userId: user.id);
   }
-
-
 }

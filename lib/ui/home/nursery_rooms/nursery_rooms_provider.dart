@@ -18,7 +18,7 @@ class NurseryRoomsProvider extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
-      bookedRooms = await firestore.getBookedRooms();
+      bookedRooms = await firestore.getBookedRooms(nurseryWise: true);
     } catch (e) {
       print(e);
     } finally {
