@@ -3,7 +3,7 @@ import 'package:nursery/model/baby.dart';
 import 'package:nursery/utils/buttons.dart';
 import 'package:nursery/utils/colors.dart';
 
-class AddNewBabyForm extends StatefulWidget {
+class BookRomForBabyForm extends StatefulWidget {
   static Future<dynamic> show(
       {required BuildContext context, required List<Baby> babies}) {
     return showModalBottomSheet(
@@ -15,19 +15,19 @@ class AddNewBabyForm extends StatefulWidget {
         ),
       ),
       clipBehavior: Clip.hardEdge,
-      builder: (context) => AddNewBabyForm(babies: babies),
+      builder: (context) => BookRomForBabyForm(babies: babies),
     );
   }
 
   final List<Baby> babies;
 
-  const AddNewBabyForm({super.key, required this.babies});
+  const BookRomForBabyForm({super.key, required this.babies});
 
   @override
-  State<AddNewBabyForm> createState() => _AddNewBabyFormState();
+  State<BookRomForBabyForm> createState() => _BookRomForBabyFormState();
 }
 
-class _AddNewBabyFormState extends State<AddNewBabyForm> {
+class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
   Baby? _selectedBaby;
 
@@ -126,7 +126,7 @@ class _AddNewBabyFormState extends State<AddNewBabyForm> {
   }
 
   _validateInput() {
-    // return (_fullName.text.isNotEmpty);
+    return true;
   }
 }
 

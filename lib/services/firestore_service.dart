@@ -90,7 +90,7 @@ class FirestoreService {
     return roomsList;
   }
 
-  Future<List<Room>?> getBookedRooms() async {
+  Future<List<Room>?> getBookedRooms({String? parentId, bool? nurseryWise}) async {
     List<Room> roomsList = [];
 
     QuerySnapshot querySnapshot =
@@ -105,24 +105,26 @@ class FirestoreService {
       // Fetching the referenced user document
       DocumentSnapshot userSnapshot = await userRef.get();
 
-      // Fetching the referenced room document
-      DocumentSnapshot roomSnapshot = await roomRef.get();
-      var roomData = roomSnapshot.data() as Map<String, dynamic>;
+      if (parentId == userSnapshot.id || nurseryWise == true) {
+        DocumentSnapshot roomSnapshot = await roomRef.get();
+        var roomData = roomSnapshot.data() as Map<String, dynamic>;
 
-      // Assuming getBabies() is a function that fetches babies
-      List<Baby>? babies = await getBabies(userId: userSnapshot.id);
-      Baby? baby = (babies != null && babies.isNotEmpty)
-          ? babies.where((element) => element.id == data['babyId']).first
-          : null;
+        // Assuming getBabies() is a function that fetches babies
+        List<Baby>? babies = await getBabies(userId: userSnapshot.id);
+        Baby? baby = (babies != null && babies.isNotEmpty)
+            ? babies.where((element) => element.id == data['babyId']).first
+            : null;
 
-      roomsList.add(
-        Room(
-            id: roomData['id'],
-            parentId: userSnapshot.id,
-            baby: baby,
-            bookingDate:
-                Formatter.convertTimestampToDateTime(data['bookingDate'])),
-      );
+        roomsList.add(
+          Room(
+              id: roomData['id'],
+              parentId: userSnapshot.id,
+              baby: baby,
+              bookingDate:
+                  Formatter.convertTimestampToDateTime(data['bookingDate'])),
+        );
+      }
+
     }
 
     return roomsList;

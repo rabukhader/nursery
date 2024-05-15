@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:nursery/services/firestore_service.dart';
 import 'package:nursery/ui/home/book_room_parent/book_room_provider.dart';
+import 'package:nursery/ui/home/forms/book_room_for_baby.dart';
 import 'package:nursery/ui/home/widgets/empty_alternate.dart';
 import 'package:nursery/ui/home/widgets/list_header.dart';
 import 'package:nursery/ui/home/widgets/loader.dart';
@@ -25,35 +26,39 @@ class BookRoom extends StatelessWidget {
                       const ListHeader(header: "Book Rooms"),
                       (provider.rooms != null && provider.rooms!.isNotEmpty)
                           ? SizedBox(
-                            height: 200.0,
-                            child: ListView.builder(
+                              height: 200.0,
+                              child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: provider.rooms!.length,
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   return RoomCard(
-                                    room: provider.rooms![index]
-                                  );
+                                      bookRoom: () {
+                                        BookRomForBabyForm.show(
+                                            context: context,
+                                            babies:
+                                                provider.getavailableBabies());
+                                      },
+                                      room: provider.rooms![index]);
                                 },
                               ),
-                          )
+                            )
                           : const EmptyAlternate(text: "No Rooms Here"),
-                      const ListHeader(header: "Already Booked Rooms"),
+                      const ListHeader(header: "Where your babies ?"),
                       provider.bookedRooms != null &&
                               provider.bookedRooms!.isNotEmpty
                           ? SizedBox(
-                            height: 200,
-                            child: ListView.builder(
+                              height: 200,
+                              child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: provider.bookedRooms!.length,
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   return RoomCard(
-                                    room: provider.bookedRooms![index]
-                                  );
+                                      room: provider.bookedRooms![index]);
                                 },
                               ),
-                          )
+                            )
                           : const EmptyAlternate(text: "No Booked Rooms")
                     ],
                   ),
@@ -61,4 +66,3 @@ class BookRoom extends StatelessWidget {
         });
   }
 }
-
