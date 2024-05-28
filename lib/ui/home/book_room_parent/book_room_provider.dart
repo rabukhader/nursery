@@ -56,11 +56,21 @@ class BookRoomprovider extends ChangeNotifier {
     return await firestore.getBookedRooms(parentId: user.id);
   }
 
-  bookRoom(roomId, babyId) async {}
+  bookRoom(BookingRoom data ) async {}
 
   getUserBabies() async {
     User? user = await GetIt.I<AuthStore>().getUser();
     if (user == null) return [];
     return await firestore.getBabies(userId: user.id);
   }
+}
+
+
+class BookingRoom{
+  final String roomId;
+  final String babyId;
+  final DateTime time;
+
+  BookingRoom({required this.roomId, required this.babyId, required this.time});
+
 }

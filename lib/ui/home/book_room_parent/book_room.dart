@@ -33,12 +33,15 @@ class BookRoom extends StatelessWidget {
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   return RoomCard(
-                                    isNursery: false,
-                                      bookRoom: () {
-                                        BookRomForBabyForm.show(
-                                            context: context,
-                                            babies:
-                                                provider.getavailableBabies());
+                                      isNursery: false,
+                                      bookRoom: () async {
+                                        BookingRoom result =
+                                            await BookRomForBabyForm.show(
+                                                context: context,
+                                                babies: provider
+                                                    .getavailableBabies());
+                                        await provider.bookRoom(result);
+                                        await provider.loadData();
                                       },
                                       room: provider.rooms![index]);
                                 },
@@ -56,7 +59,7 @@ class BookRoom extends StatelessWidget {
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   return RoomCard(
-                                    isNursery: false,
+                                      isNursery: false,
                                       room: provider.bookedRooms![index]);
                                 },
                               ),
