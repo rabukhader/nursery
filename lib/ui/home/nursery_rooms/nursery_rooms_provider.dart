@@ -8,7 +8,13 @@ class NurseryRoomsProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  bool _isAddingRoom = false;
+
+  bool get isAddingRoom => _isAddingRoom;
+
   List<Room>? bookedRooms;
+
+  List<Room>? rooms;
 
   NurseryRoomsProvider(this.firestore) {
     loadData();
@@ -18,6 +24,7 @@ class NurseryRoomsProvider extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
+      rooms = await firestore.getRooms();
       bookedRooms = await firestore.getBookedRooms(nurseryWise: true);
     } catch (e) {
       print(e);
@@ -27,9 +34,27 @@ class NurseryRoomsProvider extends ChangeNotifier {
     }
   }
 
-
-  bookRoom() async {
-
+  addRoom() async {
+    try {
+      _isAddingRoom = true;
+      notifyListeners();
+      await firestore.addRoom(getNewRoomNumber());
+      rooms = await firestore.getRooms();
+    } catch (e) {
+      print(e);
+    } finally {
+      _isAddingRoom = false;
+      notifyListeners();
+    }
   }
-
+  
+  String getNewRoomNumber() {
+    int max = 0;
+    for(int i= 0; i< (rooms?? []).length ; i++){
+      if(int.parse(rooms![i].roomNumber) > max){
+        max = int.parse(rooms![i].roomNumber);
+      }
+    }
+    return (max +1).toString();
+  }
 }

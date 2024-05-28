@@ -67,6 +67,7 @@ class NurseryDashboard extends StatelessWidget {
                                                   context: context);
                                           if (nurse != null) {
                                             await provider.addNurse(nurse);
+                                            await provider.loadData();
                                           }
                                         },
                                       );
@@ -116,6 +117,7 @@ class NurseryDashboard extends StatelessWidget {
                                       if (nurse != null) {
                                         await provider.addNurse(nurse);
                                       }
+                                      await provider.loadData();
                                     },
                                   ),
                                 )

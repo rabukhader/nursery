@@ -4,12 +4,18 @@ import 'package:nursery/utils/colors.dart';
 
 class LoaderWidget extends StatelessWidget {
   final double? size;
-  const LoaderWidget({super.key, this.size});
+  final double? height;
+  final double? width;
+  const LoaderWidget({super.key, this.size, this.height, this.width});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: LoadingAnimationWidget.bouncingBall(color: kPrimaryColor, size: size ?? 24),
+    return SizedBox(
+      width: width,
+      height: height,
+      child: Center(
+        child: LoadingAnimationWidget.bouncingBall(color: kPrimaryColor, size: size ?? 24),
+      ),
     );
   }
 }

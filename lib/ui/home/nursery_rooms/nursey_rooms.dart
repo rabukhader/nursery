@@ -6,6 +6,8 @@ import 'package:nursery/ui/home/widgets/empty_alternate.dart';
 import 'package:nursery/ui/home/widgets/list_header.dart';
 import 'package:nursery/ui/home/widgets/loader.dart';
 import 'package:nursery/ui/home/widgets/room_card.dart';
+import 'package:nursery/utils/buttons.dart';
+import 'package:nursery/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 class NurseryRooms extends StatelessWidget {
@@ -21,6 +23,47 @@ class NurseryRooms extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const ListHeader(header: "Nursery Empty Rooms"),
+                provider.isAddingRoom
+                    ? const LoaderWidget(
+                      height: 200,
+                    )
+                    : provider.rooms != null && provider.rooms!.isNotEmpty
+                        ? Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            height: 200,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: provider.rooms!.length,
+                              padding: EdgeInsets.zero,
+                              itemBuilder: (context, index) {
+                                return RoomCard(
+                                    isNursery: true,
+                                    room: provider.rooms![index]);
+                              },
+                            ),
+                          )
+                        : const EmptyAlternate(text: "No Rooms"),
+                Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: QPrimaryButton(
+                              isLoading: provider.isAddingRoom,
+                          color: kGoldenYellowColor,
+                          textColor: kBlackedColor,
+                          onPressed: () async {
+                            await provider.addRoom();
+                          },
+                          label: "Add More Rooms",
+                        ))
+                      ],
+                    )),
+                const SizedBox(
+                  height: 16.0,
+                ),
                 const ListHeader(header: "Nursery booked Rooms"),
                 provider.isLoading
                     ? const LoaderWidget()
@@ -37,13 +80,14 @@ class NurseryRooms extends StatelessWidget {
                               padding: EdgeInsets.zero,
                               itemBuilder: (context, index) {
                                 return RoomCard(
+                                  isNursery: true,
                                   room: provider.bookedRooms![index],
                                   viewRoom: () {},
                                 );
                               },
                             ),
                           )
-                        : const EmptyAlternate(text: "No Rooms Here"),
+                        : const EmptyAlternate(text: "No Booked Rooms"),
               ],
             ),
           );
