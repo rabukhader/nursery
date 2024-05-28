@@ -6,7 +6,8 @@ class RoomCard extends StatelessWidget {
   final Room room;
   final VoidCallback? bookRoom;
   final VoidCallback? viewRoom;
-  const RoomCard({super.key, required this.room, this.bookRoom, this.viewRoom});
+  final bool isNursery;
+  const RoomCard({super.key, required this.room, this.bookRoom, this.viewRoom, required this.isNursery});
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +30,15 @@ class RoomCard extends StatelessWidget {
                     const SizedBox(
                       height: 16,
                     ),
-                    Container(
+                    if(!isNursery)Container(
                         padding: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             border:
                                 Border.all(color: kPrimaryColor, width: 2.0)),
                         child: const Icon(Icons.add)),
-                        const SizedBox(height: 16,),
-                        const Text("Book Room For You Baby", textAlign: TextAlign.center,)
+                        if(!isNursery)const SizedBox(height: 16,),
+                        if(!isNursery)const Text("Book Room For You Baby", textAlign: TextAlign.center,)
                   ],
                 )
               : Padding(

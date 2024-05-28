@@ -4,6 +4,7 @@ import 'package:nursery/model/nurse.dart';
 import 'package:nursery/model/room.dart';
 import 'package:nursery/model/user.dart';
 import 'package:nursery/utils/formatter.dart';
+import 'package:uuid/uuid.dart';
 
 class FirestoreService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -93,7 +94,8 @@ class FirestoreService {
     return roomsList;
   }
 
-  Future<List<Room>?> getBookedRooms({String? parentId, bool? nurseryWise}) async {
+  Future<List<Room>?> getBookedRooms(
+      {String? parentId, bool? nurseryWise}) async {
     List<Room> roomsList = [];
 
     QuerySnapshot querySnapshot =
@@ -128,18 +130,27 @@ class FirestoreService {
                   Formatter.convertTimestampToDateTime(data['bookingDate'])),
         );
       }
-
     }
 
     return roomsList;
   }
 
-  updateUserData(String? fullname, String? gender, int? userNumber, String id) async{
-     CollectionReference users = FirebaseFirestore.instance.collection('user');
-     await users.doc(id).update({
-      'user_number' : userNumber,
-      'gender': gender,
-      'fullname': fullname
-     });
+  updateUserData(
+      String? fullname, String? gender, int? userNumber, String id) async {
+    CollectionReference users = firestore.collection('user');
+    await users.doc(id).update(
+        {'user_number': userNumber, 'gender': gender, 'fullname': fullname});
+  }
+
+  addRoom(String lastNumber) async {
+    String newNumber = (int.parse(lastNumber) + 1).toString();
+    await firestore
+        .collection('rooms')
+        .add({"room_number": newNumber, "id": generateRandomId()});
+  }
+
+  String generateRandomId() {
+    var uuid = const Uuid();
+    return uuid.v4();
   }
 }

@@ -12,31 +12,31 @@ class NurseryDashboardProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   NurseryDashboardProvider({required this.firestore}) {
-    init();
+    loadData();
   }
 
   bool _isSaving = false;
 
   bool get isSaving => _isSaving;
 
-  void init() async {
-    await getNurses();
-  }
-
-  Future getNurses() async {
+  loadData() async {
     try {
       _isLoading = true;
       notifyListeners();
-      nurses = [
-        Nurse(fullname: "", id: "", gender: "", userNumber: 0),
-        ...await firestore.getNurses()
-      ];
+      await getNurses();
     } catch (e) {
       print(e);
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future getNurses() async {
+    nurses = [
+      Nurse(fullname: "", id: "", gender: "", userNumber: 0),
+      ...await firestore.getNurses()
+    ];
   }
 
   Future addNurse(Nurse nurse) async {

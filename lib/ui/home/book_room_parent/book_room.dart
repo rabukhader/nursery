@@ -33,6 +33,7 @@ class BookRoom extends StatelessWidget {
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   return RoomCard(
+                                    isNursery: false,
                                       bookRoom: () {
                                         BookRomForBabyForm.show(
                                             context: context,
@@ -55,6 +56,7 @@ class BookRoom extends StatelessWidget {
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   return RoomCard(
+                                    isNursery: false,
                                       room: provider.bookedRooms![index]);
                                 },
                               ),
