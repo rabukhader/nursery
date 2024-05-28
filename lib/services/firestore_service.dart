@@ -62,7 +62,10 @@ class FirestoreService {
   }
 
   Future addBaby({required Baby baby, required String userId}) async {
-    firestore.collection('user').doc(userId).update(baby.toJson());
+    DocumentReference docRef = firestore.collection('user').doc(userId);
+    await docRef.update({
+      'babies': FieldValue.arrayUnion([baby.toJson()])
+    });
   }
 
   Future<List<Baby>?> getBabies({required String userId}) async {
@@ -118,6 +121,7 @@ class FirestoreService {
         roomsList.add(
           Room(
               id: roomData['id'],
+              roomNumber: roomData['room_number'],
               parentId: userSnapshot.id,
               baby: baby,
               bookingDate:
@@ -128,5 +132,14 @@ class FirestoreService {
     }
 
     return roomsList;
+  }
+
+  updateUserData(String? fullname, String? gender, int? userNumber, String id) async{
+     CollectionReference users = FirebaseFirestore.instance.collection('user');
+     await users.doc(id).update({
+      'user_number' : userNumber,
+      'gender': gender,
+      'fullname': fullname
+     });
   }
 }

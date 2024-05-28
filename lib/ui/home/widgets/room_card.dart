@@ -25,6 +25,10 @@ class RoomCard extends StatelessWidget {
                     const SizedBox(
                       height: 16,
                     ),
+                    Text("Room Number : ${room.roomNumber}"),
+                    const SizedBox(
+                      height: 16,
+                    ),
                     Container(
                         padding: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
@@ -42,7 +46,7 @@ class RoomCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Room Filled with : ${room.baby?.fullname}",
+                        "Room Number ${room.roomNumber} ,Filled with : ${room.baby?.fullname}",
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(

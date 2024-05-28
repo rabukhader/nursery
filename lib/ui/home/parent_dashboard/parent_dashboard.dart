@@ -57,6 +57,7 @@ class ParentDashboard extends StatelessWidget {
                                   await AddNewBabyForm.show(context: context);
                               if (baby != null) {
                                 await provider.addBaby(baby);
+                                await provider.loadData();
                               }
                             }
                               );

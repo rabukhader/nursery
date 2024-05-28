@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:nursery/services/auth_store.dart';
 import 'package:nursery/services/firebase_auth_service.dart';
+import 'package:nursery/services/firestore_service.dart';
 import 'package:nursery/ui/home/profile/edit_profile.dart';
 import 'package:nursery/ui/home/profile/profile_page_provider.dart';
 import 'package:nursery/ui/login-sign-up/log_in_sign_up_page.dart';
@@ -19,6 +20,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
         create: (_) => ProfilePageProvider(
+          firestore: GetIt.I<FirestoreService>(),
             authStore: GetIt.I<AuthStore>(),
             authService: GetIt.I<FirebaseAuthService>()),
         builder: (context, snapshot) {
