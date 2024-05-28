@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
 import 'package:nursery/services/firebase_auth_service.dart';
+import 'package:nursery/services/firestore_service.dart';
 
 class ProfilePageProvider extends ChangeNotifier {
   final AuthStore authStore;
   final FirebaseAuthService authService;
+  final FirestoreService firestore;
 
   User? userData;
 
@@ -17,7 +19,10 @@ class ProfilePageProvider extends ChangeNotifier {
 
   bool get isUpdating => _isUpdating;
 
-  ProfilePageProvider({required this.authStore, required this.authService}) {
+  ProfilePageProvider(
+      {required this.authStore,
+      required this.authService,
+      required this.firestore}) {
     init();
   }
 
@@ -43,15 +48,14 @@ class ProfilePageProvider extends ChangeNotifier {
     await authStore.logout();
   }
 
-  Future<void> updateUser({
-    String? fullname,
-    String? gender,
-    int? userNumber
-  }) async {
+  Future<void> updateUser(
+      {String? fullname, String? gender, int? userNumber}) async {
     try {
       _isUpdating = true;
       notifyListeners();
-      
+      await authStore.updateUser(fullname, gender, userNumber);
+      await firestore.updateUserData(
+          fullname, gender, userNumber, userData?.id ?? "0");
     } catch (e) {
       print(e);
     } finally {

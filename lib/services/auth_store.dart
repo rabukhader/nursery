@@ -27,4 +27,14 @@ class AuthStore {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.clear();
   }
+
+  updateUser(String? fullname, String? gender, int? userNumber) async {
+        User? user = await getUser();
+    if (user != null) {
+      user.userNumber = userNumber ?? user.userNumber;
+      user.gender = gender ?? user.gender;
+      user.fullname = fullname ?? user.fullname;
+      await saveUser(user);
+    }
+  }
 }
