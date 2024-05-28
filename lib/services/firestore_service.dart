@@ -142,11 +142,10 @@ class FirestoreService {
         {'user_number': userNumber, 'gender': gender, 'fullname': fullname});
   }
 
-  addRoom(String lastNumber) async {
-    String newNumber = (int.parse(lastNumber) + 1).toString();
+  addRoom(String roomNumber) async {
     await firestore
         .collection('rooms')
-        .add({"room_number": newNumber, "id": generateRandomId()});
+        .add({"room_number": roomNumber, "id": generateRandomId()});
   }
 
   String generateRandomId() {

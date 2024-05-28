@@ -38,7 +38,7 @@ class NurseryRoomsProvider extends ChangeNotifier {
     try {
       _isAddingRoom = true;
       notifyListeners();
-      await firestore.addRoom((rooms ?? []).last.roomNumber);
+      await firestore.addRoom(getNewRoomNumber());
       rooms = await firestore.getRooms();
     } catch (e) {
       print(e);
@@ -46,5 +46,15 @@ class NurseryRoomsProvider extends ChangeNotifier {
       _isAddingRoom = false;
       notifyListeners();
     }
+  }
+  
+  String getNewRoomNumber() {
+    int max = 0;
+    for(int i= 0; i< (rooms?? []).length ; i++){
+      if(int.parse(rooms![i].roomNumber) > max){
+        max = int.parse(rooms![i].roomNumber);
+      }
+    }
+    return (max +1).toString();
   }
 }
