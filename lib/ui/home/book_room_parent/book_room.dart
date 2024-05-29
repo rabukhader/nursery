@@ -3,10 +3,12 @@ import 'package:get_it/get_it.dart';
 import 'package:nursery/services/firestore_service.dart';
 import 'package:nursery/ui/home/book_room_parent/book_room_provider.dart';
 import 'package:nursery/ui/home/forms/book_room_for_baby.dart';
+import 'package:nursery/ui/home/monitoring_page/monitoring_page.dart';
 import 'package:nursery/ui/home/widgets/empty_alternate.dart';
 import 'package:nursery/ui/home/widgets/list_header.dart';
 import 'package:nursery/ui/home/widgets/loader.dart';
 import 'package:nursery/ui/home/widgets/room_card.dart';
+import 'package:nursery/utils/buttons.dart';
 import 'package:provider/provider.dart';
 
 class BookRoom extends StatelessWidget {
@@ -64,7 +66,11 @@ class BookRoom extends StatelessWidget {
                                 },
                               ),
                             )
-                          : const EmptyAlternate(text: "No Booked Rooms")
+                          : const EmptyAlternate(text: "No Booked Rooms"),
+
+                          QPrimaryButton(label: "Watch", onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const MonitoringPage()));
+                          },)
                     ],
                   ),
           );
