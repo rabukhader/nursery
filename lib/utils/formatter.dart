@@ -2,9 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class Formatter {
-  static String formatDateTimeToString(DateTime dateTime) {
+  static String formatDateToString(DateTime dateTime) {
     // Using DateFormat class to format DateTime object with custom pattern
     DateFormat formatter = DateFormat('yyyy-MM-dd');
+    return formatter.format(dateTime);
+  }
+
+    static String formatDateAndTimeToString(DateTime dateTime) {
+    DateFormat formatter = DateFormat('yyyy-MM-dd     HH:mm');
     return formatter.format(dateTime);
   }
 

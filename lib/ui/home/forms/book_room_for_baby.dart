@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:nursery/model/baby.dart';
+import 'package:nursery/ui/home/widgets/date_picker.dart';
 import 'package:nursery/utils/buttons.dart';
 import 'package:nursery/utils/colors.dart';
+import 'package:nursery/utils/formatter.dart';
 
 class BookRomForBabyForm extends StatefulWidget {
   static Future<dynamic> show(
@@ -30,6 +33,7 @@ class BookRomForBabyForm extends StatefulWidget {
 class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
   Baby? _selectedBaby;
+  DateTime? _selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +106,33 @@ class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
                       Row(
                         children: [
                           Expanded(
+                            child: GestureDetector(
+                              onTap: () async {
+                                _selectedDate = await showDate(context);
+                                setState(() {});
+                              },
+                              child: DatePicker(
+                                date: Formatter.formatDateToString(
+                                    _selectedDate ?? DateTime.now()),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 18,
+                      ),
+                      SizedBox(
+                          child: TimePickerDialog(
+                        initialEntryMode: TimePickerEntryMode.inputOnly,
+                        initialTime: TimeOfDay.now(),
+                      )),
+                      const SizedBox(
+                        height: 18,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
                               child: QPrimaryButton(
                                   label: "Book Room",
                                   enabled: _validateInput(),
@@ -112,7 +143,6 @@ class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
                                   })),
                         ],
                       ),
-                      const SizedBox(height: 22),
                     ],
                   ),
                 ),
@@ -127,6 +157,34 @@ class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
 
   _validateInput() {
     return true;
+  }
+
+  Future<DateTime?> showDate(BuildContext context) async {
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData(
+            colorScheme: const ColorScheme.light(
+              primary: kBlackedColor,
+            ),
+            textTheme: const TextTheme(
+              bodyMedium: TextStyle(color: kPrimaryDarkerColor), // Number color
+            ),
+          ),
+          child: DatePickerTheme(
+            data: const DatePickerThemeData(
+              backgroundColor: kPrimaryColor,
+            ),
+            child: child!,
+          ),
+        );
+      },
+    );
+    return selectedDate;
   }
 }
 
