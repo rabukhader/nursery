@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: 350,
               ),
               const Text(
-                "Nursery",
+                "Layali",
                 style: TextStyle(
                     color: kWhiteColor,
                     fontSize: 44,

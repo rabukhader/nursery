@@ -6,6 +6,7 @@ import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
 import 'package:nursery/services/firebase_auth_service.dart';
 import 'package:nursery/services/firestore_service.dart';
+import 'package:nursery/ui/app_info_page/app_info_page.dart';
 import 'package:nursery/ui/home/home_page.dart';
 import 'package:nursery/ui/login-sign-up/log_in_sign_up_provider.dart';
 import 'package:nursery/utils/buttons.dart';
@@ -197,8 +198,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
                                 },
                                 child: Text(
                                   isLogIn
-                                      ? "Create new account ? Go to sign up"
-                                      : "Already have account ? Go to log In",
+                                      ? "Create new account ? Go to Sign up"
+                                      : "Already have account ? Go to logIn",
                                   style: const TextStyle(color: kPrimaryColor),
                                 ),
                               )),
@@ -206,10 +207,10 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
                               duration: const Duration(milliseconds: 2100),
                               child: TextButton(
                                 onPressed: () {
-                                  print("needs implemntation");
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AppInfoPage()));
                                 },
                                 child: const Text(
-                                  "About Nursery",
+                                  "About Layali",
                                   style: TextStyle(color: kPrimaryColor),
                                 ),
                               )),
