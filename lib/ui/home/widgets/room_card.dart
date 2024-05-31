@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nursery/model/room.dart';
 import 'package:nursery/utils/colors.dart';
+import 'package:nursery/utils/formatter.dart';
 
 class RoomCard extends StatelessWidget {
   final Room room;
@@ -54,7 +55,7 @@ class RoomCard extends StatelessWidget {
                         height: 16,
                       ),
                       Text(
-                        "At ${room.bookingDate}",
+                        "At ${Formatter.formatDateToString(room.bookingDate!)}",
                         textAlign: TextAlign.center,
                       )
                     ],

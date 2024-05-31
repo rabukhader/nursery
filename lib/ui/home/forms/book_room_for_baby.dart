@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:nursery/model/baby.dart';
+import 'package:nursery/ui/home/book_room_parent/book_room_provider.dart';
 import 'package:nursery/ui/home/widgets/date_picker.dart';
 import 'package:nursery/utils/buttons.dart';
 import 'package:nursery/utils/colors.dart';
@@ -8,7 +8,7 @@ import 'package:nursery/utils/formatter.dart';
 
 class BookRomForBabyForm extends StatefulWidget {
   static Future<dynamic> show(
-      {required BuildContext context, required List<Baby> babies}) {
+      {required BuildContext context, required List<Baby> babies, required String roomId, required String userId}) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -18,13 +18,15 @@ class BookRomForBabyForm extends StatefulWidget {
         ),
       ),
       clipBehavior: Clip.hardEdge,
-      builder: (context) => BookRomForBabyForm(babies: babies),
+      builder: (context) => BookRomForBabyForm(babies: babies, roomId: roomId, userId: userId),
     );
   }
 
   final List<Baby> babies;
+  final String roomId;
+  final String userId;
 
-  const BookRomForBabyForm({super.key, required this.babies});
+  const BookRomForBabyForm({super.key, required this.babies, required this.roomId, required this.userId});
 
   @override
   State<BookRomForBabyForm> createState() => _BookRomForBabyFormState();
@@ -87,6 +89,9 @@ class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
                               value: _selectedBaby,
                               onChanged: (value) {
                                 _selectedBaby = value;
+                                setState(() {
+                                  _validateInput();
+                                });
                               },
                               items: widget.babies
                                   .map<DropdownMenuItem<Baby>>(
@@ -122,14 +127,6 @@ class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
                       const SizedBox(
                         height: 18,
                       ),
-                      SizedBox(
-                          child: TimePickerDialog(
-                        initialEntryMode: TimePickerEntryMode.inputOnly,
-                        initialTime: TimeOfDay.now(),
-                      )),
-                      const SizedBox(
-                        height: 18,
-                      ),
                       Row(
                         children: [
                           Expanded(
@@ -139,6 +136,7 @@ class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
                                   onPressed: () async {
                                     Navigator.pop(
                                       context,
+                                      BookingRoom(roomId: widget.roomId, babyId: _selectedBaby?.id ?? "", date: _selectedDate!,parentId: widget.userId )
                                     );
                                   })),
                         ],
@@ -155,8 +153,8 @@ class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
     );
   }
 
-  _validateInput() {
-    return true;
+  _validateInput(){
+    return (_selectedBaby != null);
   }
 
   Future<DateTime?> showDate(BuildContext context) async {

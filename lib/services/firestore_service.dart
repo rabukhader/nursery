@@ -3,6 +3,8 @@ import 'package:nursery/model/baby.dart';
 import 'package:nursery/model/nurse.dart';
 import 'package:nursery/model/room.dart';
 import 'package:nursery/model/user.dart';
+import 'package:nursery/ui/home/book_room_parent/book_room_provider.dart';
+import 'package:nursery/ui/home/nurses_rating_page/nurses_rating_provider.dart';
 import 'package:nursery/utils/formatter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -88,7 +90,8 @@ class FirestoreService {
     QuerySnapshot querySnapshot = await firestore.collection('rooms').get();
     querySnapshot.docs.forEach((document) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-      roomsList.add(Room.fromJson(data));
+      roomsList.add(Room.fromJson(
+          {"room_number": data['room_number'], "id": document.id}));
     });
 
     return roomsList;
@@ -126,8 +129,7 @@ class FirestoreService {
               roomNumber: roomData['room_number'],
               parentId: userSnapshot.id,
               baby: baby,
-              bookingDate:
-                  Formatter.convertTimestampToDateTime(data['bookingDate'])),
+              bookingDate: Formatter.convertTimestampToDateTime(data['date'])),
         );
       }
     }
@@ -143,13 +145,57 @@ class FirestoreService {
   }
 
   addRoom(String roomNumber) async {
-    await firestore
-        .collection('rooms')
-        .add({"room_number": roomNumber, "id": generateRandomId()});
+    DocumentReference docRef = await firestore.collection('rooms').add({
+      "room_number": roomNumber,
+    });
+
+    await docRef.update({
+      "id": docRef.id,
+    });
   }
 
   String generateRandomId() {
     var uuid = const Uuid();
     return uuid.v4();
+  }
+
+  bookRoom(BookingRoom data) async {
+    DocumentReference parentRef =
+        firestore.collection("user").doc(data.parentId);
+    DocumentReference roomRef = firestore.collection("rooms").doc(data.roomId);
+
+    await firestore.collection("booked_rooms").add({
+      "parentId": parentRef,
+      "roomId": roomRef,
+      "babyId": data.babyId,
+      "date": Formatter.convertStringToTimestamp(data.date.toString())
+    });
+  }
+
+  addNurseRating(NurseRating nurseRating) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('nurses')
+        .where('id', isEqualTo: nurseRating.nurseId)
+        .get();
+
+    for (QueryDocumentSnapshot nurseDoc in querySnapshot.docs) {
+      // Extract data from the nurse document
+      Map<String, dynamic> nurseData = nurseDoc.data() as Map<String, dynamic>;
+      // Extract previous rating and number of rating users
+      int previousRating = nurseData['rate'].toInt();
+      int numberOfRatingUsers = nurseRating.numberOfRatingUsers;
+
+      // Calculate new average rating
+      double newAverageRating = ((previousRating * numberOfRatingUsers) +
+              nurseRating.rating) /
+          (numberOfRatingUsers + 1);
+
+      await nurseDoc.reference.update({
+        'rate': newAverageRating.toInt(),
+        'number_of_rating_users': numberOfRatingUsers + 1,
+        'feedback': FieldValue.arrayUnion(
+            [nurseRating.feedback]), // Add feedback to the list
+      });
+    }
   }
 }

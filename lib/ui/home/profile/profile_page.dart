@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
 import 'package:nursery/services/firebase_auth_service.dart';
 import 'package:nursery/services/firestore_service.dart';
+import 'package:nursery/ui/home/nurses_rating_page/nurses_rating_page.dart';
 import 'package:nursery/ui/home/profile/edit_profile.dart';
 import 'package:nursery/ui/home/profile/profile_page_provider.dart';
 import 'package:nursery/ui/login-sign-up/log_in_sign_up_page.dart';
@@ -14,13 +16,14 @@ import 'package:nursery/ui/home/widgets/loader.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final UserType userType;
+  const ProfilePage({super.key, required this.userType});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
         create: (_) => ProfilePageProvider(
-          firestore: GetIt.I<FirestoreService>(),
+            firestore: GetIt.I<FirestoreService>(),
             authStore: GetIt.I<AuthStore>(),
             authService: GetIt.I<FirebaseAuthService>()),
         builder: (context, snapshot) {
@@ -74,15 +77,15 @@ class ProfilePage extends StatelessWidget {
                           width: 200,
                           child: ElevatedButton(
                             onPressed: () async {
-                                await Navigator.push(
+                              await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => EditProfile(
-                                        onUpdate: provider.updateUser,
-                                        isUpdating: provider.isUpdating,
+                                          onUpdate: provider.updateUser,
+                                          isUpdating: provider.isUpdating,
                                           user: provider.userData)));
 
-                                    await provider.init();
+                              await provider.init();
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: kPrimaryColor,
@@ -92,7 +95,20 @@ class ProfilePage extends StatelessWidget {
                                 style: TextStyle(color: kWhiteColor)),
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 30.0),
+                        if (userType == UserType.parents)
+                          ProfileMenuWidget(
+                              title: "Rate Our Nurses",
+                              icon: LineAwesomeIcons.nurse,
+                              textColor: kPrimaryColor,
+                              endIcon: false,
+                              onPress: () async {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => NursesRatingPage()
+                                            ));
+                              }),
                         const Divider(),
                         const SizedBox(height: 10),
 

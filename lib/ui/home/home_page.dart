@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
           return const BookRoom();
         }
       case 2:
-        return const ProfilePage();
+        return ProfilePage(userType: widget.userType);
     }
   }
 }

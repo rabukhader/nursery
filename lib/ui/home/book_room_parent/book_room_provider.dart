@@ -6,7 +6,7 @@ import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
 import 'package:nursery/services/firestore_service.dart';
 
-class BookRoomprovider extends ChangeNotifier {
+class BookRoomProvider extends ChangeNotifier {
   final FirestoreService firestore;
   bool _isLoading = false;
 
@@ -17,6 +17,8 @@ class BookRoomprovider extends ChangeNotifier {
   List<Room>? bookedRooms;
 
   List<Baby>? babies;
+
+  User? userData;
 
   List<Baby> getavailableBabies() {
     // Extract the IDs of babies in booked rooms
@@ -31,7 +33,8 @@ class BookRoomprovider extends ChangeNotifier {
     return availableBabies;
   }
 
-  BookRoomprovider(this.firestore) {
+  BookRoomProvider(this.firestore) {
+    getUserData();
     loadData();
   }
 
@@ -39,8 +42,8 @@ class BookRoomprovider extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
-      rooms = await firestore.getRooms();
       bookedRooms = await getBookedRooms();
+      await getRemainingRooms();
       babies = await getUserBabies();
     } catch (e) {
       print(e);
@@ -56,21 +59,65 @@ class BookRoomprovider extends ChangeNotifier {
     return await firestore.getBookedRooms(parentId: user.id);
   }
 
-  bookRoom(BookingRoom data ) async {}
+  bookRoom(BookingRoom data) async {
+    await firestore.bookRoom(data);
+  }
 
   getUserBabies() async {
     User? user = await GetIt.I<AuthStore>().getUser();
     if (user == null) return [];
     return await firestore.getBabies(userId: user.id);
   }
+
+  getUserData() async {
+    try {
+      userData = await GetIt.I<AuthStore>().getUser();
+    } catch (e) {
+      print(e);
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  getRemainingRooms() async {
+    rooms = await firestore.getRooms();
+    for (Room bookedRoom in bookedRooms!) {
+      rooms!.removeWhere((room) => room.id == bookedRoom.id);
+    }
+  }
+
+List<Room> getFinishedBooking() {
+  DateTime now = DateTime.now();
+  DateTime startOfToday = DateTime(now.year, now.month, now.day);
+  DateTime startOfYesterday = startOfToday.subtract(const Duration(days: 1));
+  DateTime startOfDayBeforeYesterday = startOfYesterday.subtract(const Duration(days: 1));
+
+  List<Room> finishedRoomBooking = (bookedRooms ?? []).where((bookedRoom) {
+    DateTime bookingDate = bookedRoom.bookingDate ?? DateTime.now();
+    return bookingDate.isBefore(startOfDayBeforeYesterday);
+  }).toList();
+
+  return finishedRoomBooking;
 }
 
+}
 
-class BookingRoom{
+class BookingRoom {
   final String roomId;
   final String babyId;
-  final DateTime time;
+  final String parentId;
+  final DateTime date;
 
-  BookingRoom({required this.roomId, required this.babyId, required this.time});
+  BookingRoom(
+      {required this.parentId,
+      required this.roomId,
+      required this.babyId,
+      required this.date});
 
+  Map<String, dynamic> toJson() => {
+        'roomId': roomId,
+        'babyId': babyId,
+        'parentId': parentId,
+        'date': date,
+      };
 }

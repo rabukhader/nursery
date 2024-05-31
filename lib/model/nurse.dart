@@ -6,7 +6,8 @@ class Nurse {
     required this.fullname,
     this.image,
     this.rate,
-    this.feedback
+    this.feedback,
+    this.numberOfRatingUsers
   });
 
   final String id;
@@ -15,6 +16,7 @@ class Nurse {
   String? gender;
   String? fullname;
   final int? rate;
+  final int? numberOfRatingUsers;
   final List<String>? feedback;
 
   factory Nurse.fromJson(Map<String, dynamic> json) => Nurse(
@@ -23,6 +25,7 @@ class Nurse {
       userNumber: json['userNumber'],
       gender: json['gender'],
       rate: json['rate'],
+      numberOfRatingUsers: json['number_of_rating_users'],
       feedback: json['feedback'] != null ? List<String>.from(json['feedback']) : null,
       fullname: json['fullname']);
 
@@ -33,6 +36,7 @@ class Nurse {
         'gender': gender,
         'fullname': fullname,
         'feedback' : feedback,
-        'rate': rate
+        'rate': rate,
+        'number_of_rating_users': numberOfRatingUsers
       };
 }

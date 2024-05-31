@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:nursery/ui/home/book_room_parent/book_room_provider.dart';
 import 'package:nursery/ui/home/monitoring_page/monitoring_provider.dart';
 import 'package:provider/provider.dart';
 
 class MonitoringPage extends StatelessWidget {
-  const MonitoringPage({super.key});
+  final BookingRoom bookedRoomDate;
+  const MonitoringPage({super.key, required this.bookedRoomDate});
 
   @override
   Widget build(BuildContext context) {
