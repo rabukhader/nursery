@@ -83,7 +83,7 @@ class BookRoom extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (_) => MonitoringPage(
-                                                      bookedRoomDate: BookingRoom(
+                                                      bookedRoomData: BookingRoom(
                                                           parentId: provider
                                                                   .userData
                                                                   ?.id ??

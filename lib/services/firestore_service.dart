@@ -215,4 +215,25 @@ class FirestoreService {
       }
     }
   }
+
+  Future<Baby?> getBabyData(String parentId, String babyId) async {
+    DocumentReference userDocRef =
+        firestore.collection('user').doc(parentId);
+    DocumentSnapshot documentSnapshot = await userDocRef.get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> data =
+          documentSnapshot.data() as Map<String, dynamic>;
+
+
+      List<dynamic> babiesList = data['babies'];
+
+      for (var babyData in babiesList) {
+        if (babyData['id'] == babyId) {
+          return Baby.fromJson(babyData);
+        }
+      }
+    }
+    return null; // Return null if no baby with the given babyId is found
+  }
 }

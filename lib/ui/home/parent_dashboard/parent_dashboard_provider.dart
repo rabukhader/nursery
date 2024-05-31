@@ -50,6 +50,6 @@ class ParentDashboardProvider extends ChangeNotifier {
   }
 
   Future loadUserData() async {
-    userData ??= await authStore.getUser();
+    userData = await authStore.getUser();
   }
 }
