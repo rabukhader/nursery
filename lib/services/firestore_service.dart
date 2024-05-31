@@ -173,7 +173,7 @@ class FirestoreService {
   }
 
   addNurseRating(NurseRating nurseRating) async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+    QuerySnapshot querySnapshot = await firestore
         .collection('nurses')
         .where('id', isEqualTo: nurseRating.nurseId)
         .get();
@@ -186,9 +186,9 @@ class FirestoreService {
       int numberOfRatingUsers = nurseRating.numberOfRatingUsers;
 
       // Calculate new average rating
-      double newAverageRating = ((previousRating * numberOfRatingUsers) +
-              nurseRating.rating) /
-          (numberOfRatingUsers + 1);
+      double newAverageRating =
+          ((previousRating * numberOfRatingUsers) + nurseRating.rating) /
+              (numberOfRatingUsers + 1);
 
       await nurseDoc.reference.update({
         'rate': newAverageRating.toInt(),
@@ -196,6 +196,23 @@ class FirestoreService {
         'feedback': FieldValue.arrayUnion(
             [nurseRating.feedback]), // Add feedback to the list
       });
+    }
+  }
+
+  deleteBookedRoom(List<Room> getRoomsToDeleted) async {
+    for (Room room in getRoomsToDeleted) {
+      DocumentReference roomRef = firestore.collection('rooms').doc(room.id);
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection('booked_rooms')
+          .where('roomId', isEqualTo: roomRef)
+          .get();
+
+      for (QueryDocumentSnapshot bookedRoomDoc in querySnapshot.docs) {
+        // Extract data from the nurse document
+
+        await bookedRoomDoc.reference.delete();
+      }
     }
   }
 }

@@ -8,6 +8,9 @@ import 'package:nursery/services/firestore_service.dart';
 
 class BookRoomProvider extends ChangeNotifier {
   final FirestoreService firestore;
+
+  DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
+
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
@@ -42,8 +45,9 @@ class BookRoomProvider extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
-      bookedRooms = await getBookedRooms();
-      await getRemainingRooms();
+      await getBookedRooms();
+      rooms = await firestore.getRooms();
+      await cleanData();
       babies = await getUserBabies();
     } catch (e) {
       print(e);
@@ -53,10 +57,25 @@ class BookRoomProvider extends ChangeNotifier {
     }
   }
 
+  cleanData() async {
+    List<Room> getRoomsToDeleted = getRoomsToDelete();
+    if (getRoomsToDeleted.isNotEmpty) {
+      await firestore.deleteBookedRoom(getRoomsToDeleted);
+      await loadData();
+    }
+  }
+
+  List<Room> getRoomsToDelete() {
+    DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
+    return (bookedRooms ?? [])
+        .where((element) => !element.bookingDate!.isAfter(yesterday))
+        .toList();
+  }
+
   getBookedRooms() async {
     User? user = await GetIt.I<AuthStore>().getUser();
     if (user == null) return [];
-    return await firestore.getBookedRooms(parentId: user.id);
+    bookedRooms = await firestore.getBookedRooms(parentId: user.id);
   }
 
   bookRoom(BookingRoom data) async {
@@ -79,27 +98,38 @@ class BookRoomProvider extends ChangeNotifier {
     }
   }
 
-  getRemainingRooms() async {
-    rooms = await firestore.getRooms();
-    for (Room bookedRoom in bookedRooms!) {
-      rooms!.removeWhere((room) => room.id == bookedRoom.id);
+  List<Room>? getRemainingRooms() {
+    List<Room>? remainingBookedRooms = getRemainingBookedRooms();
+
+    if (remainingBookedRooms == null) {
+      return rooms; // No booked rooms, so all rooms are remaining
     }
+    // Remove rooms that are also in the remainingBookedRooms list
+    rooms?.removeWhere((room) => remainingBookedRooms.contains(room));
+
+    return rooms;
   }
 
-List<Room> getFinishedBooking() {
-  DateTime now = DateTime.now();
-  DateTime startOfToday = DateTime(now.year, now.month, now.day);
-  DateTime startOfYesterday = startOfToday.subtract(const Duration(days: 1));
-  DateTime startOfDayBeforeYesterday = startOfYesterday.subtract(const Duration(days: 1));
+  List<Room>? getRemainingBookedRooms() {
+    return (bookedRooms ?? [])
+        .where((element) => element.bookingDate!.isAfter(yesterday))
+        .toList();
+  }
 
-  List<Room> finishedRoomBooking = (bookedRooms ?? []).where((bookedRoom) {
-    DateTime bookingDate = bookedRoom.bookingDate ?? DateTime.now();
-    return bookingDate.isBefore(startOfDayBeforeYesterday);
-  }).toList();
+  List<Room> getFinishedBooking() {
+    DateTime now = DateTime.now();
+    DateTime startOfToday = DateTime(now.year, now.month, now.day);
+    DateTime startOfYesterday = startOfToday.subtract(const Duration(days: 1));
+    DateTime startOfDayBeforeYesterday =
+        startOfYesterday.subtract(const Duration(days: 1));
 
-  return finishedRoomBooking;
-}
+    List<Room> finishedRoomBooking = (bookedRooms ?? []).where((bookedRoom) {
+      DateTime bookingDate = bookedRoom.bookingDate ?? DateTime.now();
+      return bookingDate.isBefore(startOfDayBeforeYesterday);
+    }).toList();
 
+    return finishedRoomBooking;
+  }
 }
 
 class BookingRoom {

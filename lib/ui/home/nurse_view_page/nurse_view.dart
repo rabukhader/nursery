@@ -61,9 +61,17 @@ class NurseViewPage extends StatelessWidget {
             ),
             Text("Nurse Number : 0${nurse.userNumber}",
                 style: const TextStyle(fontSize: 14)),
+            nurse.rate != null ?
             FixedRatingBar(
-              rating: (nurse.rate ?? 3.0).toDouble(),
+              rating: (nurse.rate!).toDouble(),
               title: "Rating By Users",
+            ): Padding(
+              padding: const EdgeInsets.symmetric(vertical:  8.0),
+              child: const Text("Still No Ratings"),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Number Of Users Add Rating : ${nurse.numberOfRatingUsers ?? "0"}"),
             ),
             if (nurse.feedback != null && nurse.feedback!.isNotEmpty)
               Column(

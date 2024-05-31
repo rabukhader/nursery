@@ -2,7 +2,13 @@ import 'package:nursery/model/baby.dart';
 import 'package:nursery/utils/formatter.dart';
 
 class Room {
-  Room({required this.id, this.parentId, this.baby, this.bookingDate, this.babyId, required this.roomNumber});
+  Room(
+      {required this.id,
+      this.parentId,
+      this.baby,
+      this.bookingDate,
+      this.babyId,
+      required this.roomNumber});
 
   final String id;
   final String roomNumber;
@@ -24,13 +30,22 @@ class Room {
           : null);
 
   Map<String, dynamic> toJson() => {
-        'room_number' : roomNumber,
+        'room_number': roomNumber,
         'id': id,
         if (baby != null) 'baby': baby!.toJson(),
         'parentId': parentId,
-        'babyId':babyId,
+        'babyId': babyId,
         if (bookingDate != null)
           'bookingDate':
               Formatter.convertStringToTimestamp(bookingDate.toString())
       };
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Room && other.id == id; // Compare rooms based on id
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }

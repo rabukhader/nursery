@@ -30,19 +30,19 @@ class NurseryRooms extends StatelessWidget {
                           ? const LoaderWidget(
                               height: 200,
                             )
-                          : provider.rooms != null && provider.rooms!.isNotEmpty
+                          : provider.getRemainingRooms() != null && provider.getRemainingRooms()!.isNotEmpty
                               ? Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 12.0),
                                   height: 200,
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: provider.rooms!.length,
+                                    itemCount: provider.getRemainingRooms()!.length,
                                     padding: EdgeInsets.zero,
                                     itemBuilder: (context, index) {
                                       return RoomCard(
                                           isNursery: true,
-                                          room: provider.rooms![index]);
+                                          room: provider.getRemainingRooms()![index]);
                                     },
                                   ),
                                 )
@@ -69,8 +69,8 @@ class NurseryRooms extends StatelessWidget {
                       const ListHeader(header: "Nursery booked Rooms"),
                       provider.isLoading
                           ? const LoaderWidget()
-                          : (provider.bookedRooms != null &&
-                                  provider.bookedRooms!.isNotEmpty)
+                          : (provider.getRemainingBookedRooms() != null &&
+                                  provider.getRemainingBookedRooms()!.isNotEmpty)
                               ? SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.9,
@@ -81,12 +81,12 @@ class NurseryRooms extends StatelessWidget {
                                         const SliverGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 2,
                                             childAspectRatio: 1),
-                                    itemCount: provider.bookedRooms!.length,
+                                    itemCount: provider.getRemainingBookedRooms()!.length,
                                     padding: EdgeInsets.zero,
                                     itemBuilder: (context, index) {
                                       return RoomCard(
                                         isNursery: true,
-                                        room: provider.bookedRooms![index],
+                                        room: provider.getRemainingBookedRooms()![index],
                                         viewRoom: () {},
                                       );
                                     },

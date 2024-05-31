@@ -26,12 +26,13 @@ class BookRoom extends StatelessWidget {
                 : Column(
                     children: [
                       const ListHeader(header: "Book Rooms"),
-                      (provider.rooms != null && provider.rooms!.isNotEmpty)
+                      (provider.getRemainingRooms() != null &&
+                              provider.getRemainingRooms()!.isNotEmpty)
                           ? SizedBox(
                               height: 200.0,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: provider.rooms!.length,
+                                itemCount: provider.getRemainingRooms()!.length,
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   return RoomCard(
@@ -42,8 +43,9 @@ class BookRoom extends StatelessWidget {
                                                 context: context,
                                                 userId:
                                                     provider.userData?.id ?? "",
-                                                roomId:
-                                                    provider.rooms![index].id,
+                                                roomId: provider
+                                                    .getRemainingRooms()![index]
+                                                    .id,
                                                 babies: provider
                                                     .getavailableBabies());
                                         if (result != null) {
@@ -51,25 +53,29 @@ class BookRoom extends StatelessWidget {
                                           await provider.loadData();
                                         }
                                       },
-                                      room: provider.rooms![index]);
+                                      room:
+                                          provider.getRemainingRooms()![index]);
                                 },
                               ),
                             )
                           : const EmptyAlternate(text: "No Rooms Here"),
                       const ListHeader(header: "Where your babies ?"),
-                      provider.bookedRooms != null &&
-                              provider.bookedRooms!.isNotEmpty
+                      provider.getRemainingBookedRooms() != null &&
+                              provider.getRemainingBookedRooms()!.isNotEmpty
                           ? SizedBox(
                               height: 200,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: provider.bookedRooms!.length,
+                                itemCount:
+                                    provider.getRemainingBookedRooms()!.length,
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () async {
                                       if (isSameDate(
-                                          provider.bookedRooms![index]
+                                          provider
+                                                  .getRemainingBookedRooms()![
+                                                      index]
                                                   .bookingDate ??
                                               DateTime.now(),
                                           DateTime.now())) {
@@ -83,17 +89,17 @@ class BookRoom extends StatelessWidget {
                                                                   ?.id ??
                                                               "",
                                                           roomId: provider
-                                                              .bookedRooms![
+                                                              .getRemainingBookedRooms()![
                                                                   index]
                                                               .id,
                                                           babyId: provider
-                                                                  .bookedRooms![
+                                                                  .getRemainingBookedRooms()![
                                                                       index]
                                                                   .baby
                                                                   ?.id ??
                                                               "",
                                                           date: provider
-                                                                  .bookedRooms![
+                                                                  .getRemainingBookedRooms()![
                                                                       index]
                                                                   .bookingDate ??
                                                               DateTime.now()),
@@ -105,7 +111,8 @@ class BookRoom extends StatelessWidget {
                                     },
                                     child: RoomCard(
                                         isNursery: false,
-                                        room: provider.bookedRooms![index]),
+                                        room: provider
+                                            .getRemainingBookedRooms()![index]),
                                   );
                                 },
                               ),
