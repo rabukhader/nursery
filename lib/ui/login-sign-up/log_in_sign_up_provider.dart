@@ -52,6 +52,7 @@ class LoginSignupProvider extends ChangeNotifier {
       UserCredential user =
           await authService.signUp(email: email, password: password);
       await addUserOnFirebase(cuser.User(
+        hasPayment: false,
           email: email,
           password: password,
           fullname: fullname,
@@ -60,6 +61,7 @@ class LoginSignupProvider extends ChangeNotifier {
           id: user.user?.uid ?? ""));
 
       await _saveInfoOnAuthStoreAfterSignUp(cuser.User(
+        hasPayment: false,
           id: user.user!.uid,
           email: email,
           password: password,
@@ -96,6 +98,7 @@ class LoginSignupProvider extends ChangeNotifier {
     Map<String, dynamic> data = await firestoreService.getUserData(id: id);
 
     await authStore.saveUser(cuser.User(
+      hasPayment: data['hasPayment'],
         fullname: data['fullname'],
         id: id,
         email: email,

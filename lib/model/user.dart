@@ -8,10 +8,12 @@ class User {
     required this.userNumber,
     required this.gender,
     required this.fullname,
+    required this.hasPayment,
     this.babies
   });
 
   final String id;
+  final bool hasPayment;
   String email;
   String password;
   int? userNumber;
@@ -36,6 +38,7 @@ class User {
       userNumber: json['userNumber'],
       gender: json['gender'],
       fullname: json['fullname'],
+      hasPayment: json['hasPayment'] ??false,
       babies: json['babies']?.map((e) => Baby.fromJson(e)).toList()
       );
 
@@ -46,7 +49,8 @@ class User {
         'userNumber': userNumber,
         'gender': gender,
         'fullname': fullname,
-        'babies': babies
+        'babies': babies,
+        'hasPayment': hasPayment
       };
 }
 

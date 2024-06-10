@@ -7,6 +7,7 @@ import 'package:nursery/services/auth_store.dart';
 import 'package:nursery/services/firebase_auth_service.dart';
 import 'package:nursery/services/firestore_service.dart';
 import 'package:nursery/ui/home/nurses_rating_page/nurses_rating_page.dart';
+import 'package:nursery/ui/home/payment_page/payment_page.dart';
 import 'package:nursery/ui/home/profile/edit_profile.dart';
 import 'package:nursery/ui/home/profile/profile_page_provider.dart';
 import 'package:nursery/ui/login-sign-up/log_in_sign_up_page.dart';
@@ -106,8 +107,21 @@ class ProfilePage extends StatelessWidget {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => NursesRatingPage()
-                                            ));
+                                        builder: (context) =>
+                                            const NursesRatingPage()));
+                              }),
+                        if (userType == UserType.parents)
+                          ProfileMenuWidget(
+                              title: "Payment",
+                              icon: LineAwesomeIcons.money_bill,
+                              textColor: kPrimaryColor,
+                              endIcon: false,
+                              onPress: () async {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PaymentPage()));
                               }),
                         const Divider(),
                         const SizedBox(height: 10),

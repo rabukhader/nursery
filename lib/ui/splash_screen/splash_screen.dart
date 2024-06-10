@@ -65,6 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _onSplashCompleted() async {
+    
     User? user = await GetIt.I<AuthStore>().getUser();
     if (user != null) {
       Navigator.pushAndRemoveUntil(
