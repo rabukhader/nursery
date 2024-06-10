@@ -19,24 +19,28 @@ class MonitoringPage extends StatefulWidget {
 }
 
 class _MonitoringPageState extends State<MonitoringPage> {
-  final channel = IOWebSocketChannel.connect('ws://192.168.1.217:8765');
-  Uint8List? _bytes;
-  final _frameBuffer = <Uint8List>[];
-  Timer? _timer;
+  final channel = IOWebSocketChannel.connect('ws://82.205.40.70:8765');
+  final List<Uint8List> _frameBuffer = [];
+  Uint8List? _currentFrame;
+  Timer? _playbackTimer;
 
   @override
   void initState() {
     super.initState();
+
+    // Listen to the WebSocket stream
     channel.stream.listen((data) {
-      if (_frameBuffer.length < 10) { // Buffer up to 10 frames
+      // Add incoming frames to the buffer
+      if (_frameBuffer.length < 20) {
         _frameBuffer.add(Uint8List.fromList(data));
       }
     });
 
-    _timer = Timer.periodic(const Duration(milliseconds: 33), (timer) {
+    // Set up a periodic timer to play frames from the buffer
+    _playbackTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
       if (_frameBuffer.isNotEmpty) {
         setState(() {
-          _bytes = _frameBuffer.removeAt(0);
+          _currentFrame = _frameBuffer.removeAt(0);
         });
       }
     });
@@ -44,7 +48,7 @@ class _MonitoringPageState extends State<MonitoringPage> {
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _playbackTimer?.cancel();
     channel.sink.close();
     super.dispose();
   }
@@ -66,8 +70,8 @@ class _MonitoringPageState extends State<MonitoringPage> {
                     centerTitle: true,
                   ),
                   body: Center(
-                    child: _bytes != null
-                        ? Image.memory(_bytes!)
+                    child: _currentFrame != null
+                        ? Image.memory(_currentFrame!)
                         : const LoaderWidget(),
                   ),
                 );
