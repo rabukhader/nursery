@@ -9,6 +9,10 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
+	<key>NSCameraUsageDescription</key>
+    <string>App requires access to the camera for live streaming feature.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>App requires access to the microphone for live streaming feature.</string>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
