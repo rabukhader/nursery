@@ -39,6 +39,8 @@ dependencies:
   video_player: ^2.8.6
   webview_flutter: ^4.8.0
   flutter_paypal_checkout: ^1.0.1
+  flutter_webrtc: ^0.10.8
+  flutter_ffmpeg: ^0.4.2
 
 
 dev_dependencies:

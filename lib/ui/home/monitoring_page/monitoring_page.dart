@@ -6,9 +6,7 @@ import 'package:nursery/ui/home/monitoring_page/monitoring_provider.dart';
 import 'package:nursery/ui/home/widgets/loader.dart';
 import 'package:nursery/utils/colors.dart';
 import 'package:provider/provider.dart';
-import 'package:web_socket_channel/io.dart';
-import 'dart:typed_data';
-import 'dart:async';
+import 'package:video_player/video_player.dart';
 
 class MonitoringPage extends StatefulWidget {
   final BookingRoom bookedRoomData;
@@ -19,62 +17,52 @@ class MonitoringPage extends StatefulWidget {
 }
 
 class _MonitoringPageState extends State<MonitoringPage> {
-  final channel = IOWebSocketChannel.connect('ws://82.205.40.70:8765');
-  final List<Uint8List> _frameBuffer = [];
-  Uint8List? _currentFrame;
-  Timer? _playbackTimer;
+  late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-
-    // Listen to the WebSocket stream
-    channel.stream.listen((data) {
-      // Add incoming frames to the buffer
-      if (_frameBuffer.length < 20) {
-        _frameBuffer.add(Uint8List.fromList(data));
-      }
-    });
-
-    // Set up a periodic timer to play frames from the buffer
-    _playbackTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
-      if (_frameBuffer.isNotEmpty) {
-        setState(() {
-          _currentFrame = _frameBuffer.removeAt(0);
-        });
-      }
-    });
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse('rtmp://192.168.1.217:8080/hls/test.m3u8'),
+    )..initialize().then((_) {
+        setState(() {});
+        _controller.play();
+      });
   }
 
   @override
   void dispose() {
-    _playbackTimer?.cancel();
-    channel.sink.close();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => MonitoringProvider(
-            bookedRoomData: widget.bookedRoomData,
-            firestore: GetIt.I<FirestoreService>()),
-        builder: (context, snapshot) {
-          MonitoringProvider provider = context.watch();
-          return provider.isLoading
-              ? const LoaderWidget()
-              : Scaffold(
-                  appBar: AppBar(
-                    backgroundColor: kPrimaryColor,
-                    title: Text("${provider.babyData?.fullname} Monitoring"),
-                    centerTitle: true,
-                  ),
-                  body: Center(
-                    child: _currentFrame != null
-                        ? Image.memory(_currentFrame!)
-                        : const LoaderWidget(),
-                  ),
-                );
-        });
+      create: (context) => MonitoringProvider(
+        bookedRoomData: widget.bookedRoomData,
+        firestore: GetIt.I<FirestoreService>(),
+      ),
+      builder: (context, snapshot) {
+        MonitoringProvider provider = context.watch();
+        return provider.isLoading
+            ? const LoaderWidget()
+            : Scaffold(
+                appBar: AppBar(
+                  backgroundColor: kPrimaryColor,
+                  title: Text("${provider.babyData?.fullname} Monitoring"),
+                  centerTitle: true,
+                ),
+                body: Center(
+                  child: _controller.value.isInitialized
+                      ? AspectRatio(
+                          aspectRatio: _controller.value.aspectRatio,
+                          child: VideoPlayer(_controller),
+                        )
+                      : CircularProgressIndicator(),
+                ),
+              );
+      },
+    );
   }
 }
