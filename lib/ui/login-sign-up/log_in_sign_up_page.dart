@@ -162,8 +162,10 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
                                             if (result == "pass") {
                                               manageNavigation(_email.text);
                                             } else {
-                                              ErrorUtils.showGeneralError(
-                                                  context, result);
+                                              ErrorUtils.showMessage(
+                                                  context, result,
+                                                  backgroundColor: Colors.red
+                                                  );
                                             }
                                           }
                                         : () async {
@@ -177,8 +179,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
                                             if (result == "pass") {
                                               manageNavigation(_email.text);
                                             } else {
-                                              ErrorUtils.showGeneralError(
-                                                  context, result);
+                                              ErrorUtils.showMessage(
+                                                  context, result,
+                                                  backgroundColor: Colors.red);
                                             }
                                           },
                                   )),
@@ -207,7 +210,11 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
                               duration: const Duration(milliseconds: 2100),
                               child: TextButton(
                                 onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AppInfoPage()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AppInfoPage()));
                                 },
                                 child: const Text(
                                   "About Layali",
@@ -434,12 +441,20 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   }
 
   void manageNavigation(String email) {
-    if(email.contains('nursery')) {
+    if (email.contains('nursery')) {
       Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const HomePage(userType: UserType.nursery,)));
+          context,
+          MaterialPageRoute(
+              builder: (context) => const HomePage(
+                    userType: UserType.nursery,
+                  )));
     } else {
-       Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const HomePage(userType: UserType.parents,)));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const HomePage(
+                    userType: UserType.parents,
+                  )));
     }
   }
 

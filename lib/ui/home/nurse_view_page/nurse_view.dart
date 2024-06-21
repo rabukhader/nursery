@@ -65,9 +65,9 @@ class NurseViewPage extends StatelessWidget {
             FixedRatingBar(
               rating: (nurse.rate!).toDouble(),
               title: "Rating By Users",
-            ): Padding(
-              padding: const EdgeInsets.symmetric(vertical:  8.0),
-              child: const Text("Still No Ratings"),
+            ): const Padding(
+              padding: EdgeInsets.symmetric(vertical:  8.0),
+              child: Text("Still No Ratings"),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

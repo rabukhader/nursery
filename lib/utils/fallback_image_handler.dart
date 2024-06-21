@@ -6,7 +6,14 @@ class FallbackImageHandler extends StatelessWidget {
   final String localSvgAlternate;
   final double? width;
   final double? height;
-  const FallbackImageHandler({super.key, this.image, required this.localSvgAlternate, this.width, this.height});
+  final bool? fallbackNotSvg;
+  const FallbackImageHandler(
+      {super.key,
+      this.image,
+      required this.localSvgAlternate,
+      this.width,
+      this.height,
+      this.fallbackNotSvg});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +24,16 @@ class FallbackImageHandler extends StatelessWidget {
             width: width ?? 75,
             height: height ?? 80,
           ))
-        : SvgPicture.asset(
-            localSvgAlternate,
-            width: width?? 75,
-            height: height?? 80,
-          );
+        : fallbackNotSvg == true
+            ? Image.asset(
+                localSvgAlternate,
+                width: width ?? 75,
+                height: height ?? 80,
+              )
+            : SvgPicture.asset(
+                localSvgAlternate,
+                width: width ?? 75,
+                height: height ?? 80,
+              );
   }
 }

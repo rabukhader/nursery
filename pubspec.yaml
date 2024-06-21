@@ -42,6 +42,7 @@ dependencies:
   flutter_webrtc: ^0.10.8
   flutter_ffmpeg: ^0.4.2
   rtmp_broadcaster: ^2.2.4
+  event_bus: ^2.0.0
 
 
 dev_dependencies:

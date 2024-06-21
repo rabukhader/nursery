@@ -105,8 +105,8 @@ class BookRoom extends StatelessWidget {
                                                               DateTime.now()),
                                                     )));
                                       } else {
-                                        ErrorUtils.showGeneralError(context,
-                                            "This is not the time to watch");
+                                        ErrorUtils.showMessage(context,
+                                            "This is not the time to watch", backgroundColor: Colors.red);
                                       }
                                     },
                                     child: RoomCard(

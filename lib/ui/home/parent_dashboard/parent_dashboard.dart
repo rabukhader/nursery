@@ -13,13 +13,26 @@ import 'package:nursery/ui/home/widgets/list_header.dart';
 import 'package:nursery/ui/home/widgets/loader.dart';
 import 'package:nursery/ui/home/parent_dashboard/parent_dashboard_provider.dart';
 import 'package:nursery/utils/buttons.dart';
+import 'package:nursery/utils/cache_picture.dart';
 import 'package:nursery/utils/fallback_image_handler.dart';
 import 'package:nursery/utils/icons.dart';
 import 'package:nursery/utils/welcome_messages.dart';
 import 'package:provider/provider.dart';
 
-class ParentDashboard extends StatelessWidget {
+class ParentDashboard extends StatefulWidget {
   const ParentDashboard({super.key});
+
+  @override
+  State<ParentDashboard> createState() => _ParentDashboardState();
+}
+
+class _ParentDashboardState extends State<ParentDashboard> {
+
+  @override
+  void didChangeDependencies(){
+    precacheSvgPicture(kNurseryDashboard);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +50,7 @@ class ParentDashboard extends StatelessWidget {
                 child: Row(
                   children: [
                     SvgPicture.asset(
-                      kAternateBay,
+                      kAternateBabyBoy,
                       width: 45,
                       height: 45,
                     ),
@@ -134,16 +147,20 @@ class BabyCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  baby.gender == "male"?
                   FallbackImageHandler(
                     image: baby.image,
-                    localSvgAlternate: kAternateBay,
+                    localSvgAlternate: kAternateBabyBoy,
+                  ) : FallbackImageHandler(
+                    image: baby.image,
+                    localSvgAlternate: kAlternateBabyGirl,
+                    fallbackNotSvg: true,
                   )
                 ],
               ),
               Column(
                 children: [
                   Text(baby.fullname ?? ""),
-                  Text(baby.gender ?? ""),
                 ],
               )
             ],

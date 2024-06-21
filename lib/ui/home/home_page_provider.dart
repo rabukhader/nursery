@@ -1,17 +1,37 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
+import 'package:nursery/utils/toaster.dart';
+
+import '../../app/nursery_app.dart';
+import '../../services/notification_service.dart';
 
 class HomePageProvider extends ChangeNotifier {
   final AuthStore authStore;
   User? userData;
+  UserType userType;
 
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
 
-  HomePageProvider(this.authStore) {
+  StreamSubscription? notificationEventSubscription;
+
+  HomePageProvider(this.authStore, this.userType) {
     init();
+    if (userType == UserType.parents) {
+      _startListening();
+    }
+  }
+
+  _startListening() {
+    notificationEventSubscription =
+        eventBus.on<NotificationEvent>().listen((event) {
+      ErrorUtils.showMessage(
+          rootNavigatorKey.currentState!.context, event.data, backgroundColor: Colors.red);
+    });
   }
 
   void init() async {

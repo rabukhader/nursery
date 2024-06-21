@@ -1,3 +1,4 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+final EventBus eventBus = EventBus();
 
 class NurseryApp extends StatefulWidget {
   const NurseryApp({super.key});

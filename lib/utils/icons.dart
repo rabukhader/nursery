@@ -6,7 +6,8 @@ const kProfileFemale = "assets/icons/profileFemale.svg";
 const kNurseryDashboard = 'assets/icons/nursery-dashboard.svg';
 const kNoNurses = 'assets/icons/no-nurses.svg';
 const kAlternateNurse = 'assets/icons/alternate_nurse.svg';
-const kAternateBay = 'assets/icons/baby_alternate.svg';
+const kAternateBabyBoy = 'assets/icons/baby_alternate.svg';
+const kAlternateBabyGirl = 'assets/icons/baby_girl_alternate.webp';
 const kPaypal = 'assets/icons/pp.webp';
 
 

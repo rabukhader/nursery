@@ -9,7 +9,7 @@ import 'package:nursery/services/firestore_service.dart';
 class BookRoomProvider extends ChangeNotifier {
   final FirestoreService firestore;
 
-  DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
+  DateTime yesterday = DateTime.now().subtract(const Duration(days: 1));
 
   bool _isLoading = false;
 
@@ -65,10 +65,11 @@ class BookRoomProvider extends ChangeNotifier {
     }
   }
 
-  List<Room> getRoomsToDelete() {
-    DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
+List<Room> getRoomsToDelete() {
+    DateTime now = DateTime.now();
+    DateTime startOfToday = DateTime(now.year, now.month, now.day); // Start of today
     return (bookedRooms ?? [])
-        .where((element) => !element.bookingDate!.isAfter(yesterday))
+        .where((element) => element.bookingDate!.isBefore(startOfToday))
         .toList();
   }
 

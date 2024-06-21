@@ -24,7 +24,7 @@ class ParentDashboardProvider extends ChangeNotifier {
       _isLoadingBabies = true;
       notifyListeners();
       await loadUserData();
-      babies = await firestore.getBabies(userId: userData!.id);
+      await getUserBabies();
       if(babies != null){
         babies!.insert(0, Baby(id: "454545", gender: "female", fullname: "test"));
       }
@@ -51,5 +51,9 @@ class ParentDashboardProvider extends ChangeNotifier {
 
   Future loadUserData() async {
     userData = await authStore.getUser();
+  }
+
+  Future getUserBabies() async {
+    babies = await firestore.getBabies(userId: userData!.id);
   }
 }
