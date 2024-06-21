@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
+import 'package:nursery/utils/colors.dart';
 import 'package:nursery/utils/toaster.dart';
 
 import '../../app/nursery_app.dart';
@@ -29,8 +30,14 @@ class HomePageProvider extends ChangeNotifier {
   _startListening() {
     notificationEventSubscription =
         eventBus.on<NotificationEvent>().listen((event) {
-      ErrorUtils.showMessage(
-          rootNavigatorKey.currentState!.context, event.data, backgroundColor: Colors.red);
+      ErrorUtils.showNotificationMessage(
+          rootNavigatorKey.currentState!.context, 
+          event.data, 
+          textColor: kPrimaryColor,
+          backgroundColor: kWhiteColor.withOpacity(0.9),
+          appearanceDuration: 5,
+          borderRadius: 12
+          );
     });
   }
 

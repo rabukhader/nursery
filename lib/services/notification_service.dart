@@ -1,11 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nursery/app/nursery_app.dart';
 import 'package:nursery/model/user.dart';
 
 import 'auth_store.dart';
-import 'package:http/http.dart' as http;
 
 class NotificationService extends ChangeNotifier {
   final AuthStore authStore;
@@ -25,7 +23,7 @@ class NotificationService extends ChangeNotifier {
   }
 
   Future<void> fetchData() async {
-    const url = 'https://api.example.com/data';
+    // const url = 'https://api.example.com/data';
     try {
       // final response = await http.get(Uri.parse(url));
 
@@ -39,7 +37,8 @@ class NotificationService extends ChangeNotifier {
       //   print('Failed to load data. Status code: ${response.statusCode}');
       // }
       await Future.delayed(Duration(seconds: 2), () {
-        eventBus.fire(NotificationEvent("data"));
+        eventBus.fire(NotificationEvent("Your Baby is Crying \n Tap to Enter The Room"));
+        startListening();
         // startListening();
       });
     } catch (e) {

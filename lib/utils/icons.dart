@@ -9,6 +9,7 @@ const kAlternateNurse = 'assets/icons/alternate_nurse.svg';
 const kAternateBabyBoy = 'assets/icons/baby_alternate.svg';
 const kAlternateBabyGirl = 'assets/icons/baby_girl_alternate.webp';
 const kPaypal = 'assets/icons/pp.webp';
+const kNotification = "assets/icons/notification_ring.svg";
 
 
 /*---------------------------------- Pngs -------------------------*/
