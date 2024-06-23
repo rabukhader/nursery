@@ -1,9 +1,11 @@
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nursery/app/nursery_app.dart';
 import 'package:nursery/model/user.dart';
 
 import 'auth_store.dart';
+import 'package:http/http.dart' as http;
 
 class NotificationService extends ChangeNotifier {
   final AuthStore authStore;
@@ -23,27 +25,22 @@ class NotificationService extends ChangeNotifier {
   }
 
   Future<void> fetchData() async {
-    // const url = 'https://api.example.com/data';
-    try {
-      // final response = await http.get(Uri.parse(url));
+    const url = 'http://10.0.2.2:5000/timestamps';
 
-      // if (response.statusCode == 200) {
-      //   // If the server returns a 200 OK response, parse the JSON
-      //   final data = jsonDecode(response.body);
-      //   print('Data: $data');
-      //   eventBus.fire(NotificationEvent(data));
-      // } else {
-      //   // If the server did not return a 200 OK response, throw an exception
-      //   print('Failed to load data. Status code: ${response.statusCode}');
-      // }
-      await Future.delayed(Duration(seconds: 2), () {
-        eventBus.fire(NotificationEvent("Your Baby is Crying \n Tap to Enter The Room"));
-        startListening();
+    final response = await http.get(Uri.parse(url));
+
+    // Decode the JSON response
+    var data = jsonDecode(response.body);
+
+    if (data != null && data is List && data.isNotEmpty) {
+      await Future.delayed(const Duration(seconds: 2), () {
+        eventBus.fire(
+            NotificationEvent("Your Baby is Crying \n Tap to Enter The Room"));
+        // startListening();
         // startListening();
       });
-    } catch (e) {
-      print('Error: $e');
     }
+    startListening();
   }
 }
 

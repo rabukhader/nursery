@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:nursery/ui/home/monitoring_page/monitoring_page.dart';
 import 'package:nursery/utils/icons.dart';
 
 class ErrorUtils {
@@ -45,6 +46,9 @@ class ErrorUtils {
       int? appearanceDuration,
       int? animationDuration}) async {
     Flushbar flushBar = Flushbar(
+      onTap: (v) => {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const MonitoringPage()))
+      },
       flushbarPosition: FlushbarPosition.TOP,
       backgroundColor:
           backgroundColor ?? const Color.fromARGB(151, 165, 178, 168),

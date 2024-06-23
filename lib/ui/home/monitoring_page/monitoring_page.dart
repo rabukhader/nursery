@@ -9,8 +9,8 @@ import 'package:nursery/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 class MonitoringPage extends StatefulWidget {
-  final BookingRoom bookedRoomData;
-  const MonitoringPage({super.key, required this.bookedRoomData});
+  final BookingRoom? bookedRoomData;
+  const MonitoringPage({super.key, this.bookedRoomData});
 
   @override
   State<MonitoringPage> createState() => _MonitoringPageState();
@@ -47,7 +47,6 @@ class _MonitoringPageState extends State<MonitoringPage> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MonitoringProvider(
-        bookedRoomData: widget.bookedRoomData,
         firestore: GetIt.I<FirestoreService>(),
       ),
       builder: (context, snapshot) {

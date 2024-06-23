@@ -217,7 +217,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
                                               const AppInfoPage()));
                                 },
                                 child: const Text(
-                                  "About Layali",
+                                  "About Basma",
                                   style: TextStyle(color: kPrimaryColor),
                                 ),
                               )),
