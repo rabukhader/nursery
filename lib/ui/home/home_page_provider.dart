@@ -1,13 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
+import 'package:nursery/utils/buttons.dart';
 import 'package:nursery/utils/colors.dart';
 import 'package:nursery/utils/toaster.dart';
+import 'package:http/http.dart' as http;
 
 import '../../app/nursery_app.dart';
-import '../../services/notification_service.dart';
 
 class HomePageProvider extends ChangeNotifier {
   final AuthStore authStore;
@@ -18,27 +20,19 @@ class HomePageProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  String? _ip;
+
+  String? get ip => _ip;
+
+  set setIp(value) {
+    _ip = value;
+    notifyListeners();
+  }
+
   StreamSubscription? notificationEventSubscription;
 
   HomePageProvider(this.authStore, this.userType) {
     init();
-    if (userType == UserType.parents) {
-      _startListening();
-    }
-  }
-
-  _startListening() {
-    notificationEventSubscription =
-        eventBus.on<NotificationEvent>().listen((event) {
-      ErrorUtils.showNotificationMessage(
-          rootNavigatorKey.currentState!.context, 
-          event.data, 
-          textColor: kPrimaryColor,
-          backgroundColor: kWhiteColor.withOpacity(0.9),
-          appearanceDuration: 5,
-          borderRadius: 12
-          );
-    });
   }
 
   void init() async {
@@ -46,11 +40,95 @@ class HomePageProvider extends ChangeNotifier {
       _isLoading = true;
       notifyListeners();
       userData = await authStore.getUser();
+      if (userType == UserType.parents) {
+        _startListening();
+      }
     } catch (e) {
       print(e);
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future _startListening() async {
+    await await getIp();
+    while (true) {
+      await Future.delayed(const Duration(seconds: 5));
+      await fetchData();
+    }
+  }
+
+  Future<void> fetchData() async {
+    const url = 'http://192.168.1.141:5000/timestamps';
+
+    try {
+      print("here");
+
+      final response = await http.get(Uri.parse(url));
+      print(response);
+      var data = jsonDecode(response.body);
+      if (data != null && data is List && data.isNotEmpty) {
+        ErrorUtils.showNotificationMessage(
+            rootNavigatorKey.currentState!.context, "Your Baby is crying",
+            textColor: kPrimaryColor,
+            backgroundColor: kWhiteColor.withOpacity(0.9),
+            appearanceDuration: 5,
+            borderRadius: 12);
+      }
+      print(data);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  getIp() async {
+    _ip = await showDialog(
+        context: rootNavigatorKey.currentState!.context,
+        builder: (BuildContext context) {
+          final TextEditingController ipController = TextEditingController();
+          final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+          return AlertDialog(
+            title: const Text('Enter IP Address'),
+            content: Form(
+              key: formKey,
+              child: TextFormField(
+                controller: ipController,
+                decoration: const InputDecoration(
+                  labelText: 'IP Address',
+                  hintText: '192.168.....',
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  // Simple regex to validate IP address
+                  const ipPattern = r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$';
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter an IP address';
+                  }
+                  if (!RegExp(ipPattern).hasMatch(value)) {
+                    return 'Please enter a valid IP address';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            actions: <Widget>[
+              QSecondaryButton(
+                label: "Cancel",
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              QPrimaryButton(
+                label: "Change",
+                onPressed: () {
+                  if (formKey.currentState?.validate() == true) {
+                    Navigator.pop(context, ipController.text);
+                  }
+                },
+              ),
+            ],
+          );
+        });
   }
 }

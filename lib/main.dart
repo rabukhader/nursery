@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:nursery/model/user.dart';
 import 'package:nursery/services/firebase_auth_service.dart';
 import 'package:nursery/services/firestore_service.dart';
-import 'package:nursery/services/notification_service.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +29,4 @@ void _setupGetIt() {
   GetIt.I.registerLazySingleton<FirestoreService>(() => FirestoreService());
   GetIt.I.registerLazySingleton<FirebaseAuthService>(
       () => FirebaseAuthService(authStore: GetIt.I<AuthStore>()));
-    GetIt.I.registerLazySingleton<NotificationService>(
-      () => NotificationService(GetIt.I<AuthStore>(), UserType.nursery),);
 }

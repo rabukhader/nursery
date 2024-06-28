@@ -3,11 +3,14 @@ import 'package:get_it/get_it.dart';
 import 'package:nursery/services/firestore_service.dart';
 import 'package:nursery/ui/home/book_room_parent/book_room_provider.dart';
 import 'package:nursery/ui/home/forms/book_room_for_baby.dart';
+import 'package:nursery/ui/home/home_page_provider.dart';
+import 'package:nursery/ui/home/ip_address_page/ip_address_page.dart';
 import 'package:nursery/ui/home/monitoring_page/monitoring_page.dart';
 import 'package:nursery/ui/home/widgets/empty_alternate.dart';
 import 'package:nursery/ui/home/widgets/list_header.dart';
 import 'package:nursery/ui/home/widgets/loader.dart';
 import 'package:nursery/ui/home/widgets/room_card.dart';
+import 'package:nursery/utils/buttons.dart';
 import 'package:nursery/utils/toaster.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +28,29 @@ class BookRoom extends StatelessWidget {
                 ? const LoaderWidget()
                 : Column(
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18, vertical: 12),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: QPrimaryButton(
+                              label: "Check IP Adress",
+                              onPressed: () async {
+                                String? ip =
+                                    context.read<HomePageProvider>().ip;
+                                String? changed = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => IpAddressPage(
+                                              ipAddress: ip,
+                                            )));
+                                context.read<HomePageProvider>().setIp = changed;
+                              },
+                            ))
+                          ],
+                        ),
+                      ),
                       const ListHeader(header: "Book Rooms"),
                       (provider.getRemainingRooms() != null &&
                               provider.getRemainingRooms()!.isNotEmpty)
@@ -79,34 +105,25 @@ class BookRoom extends StatelessWidget {
                                                   .bookingDate ??
                                               DateTime.now(),
                                           DateTime.now())) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (_) => MonitoringPage(
-                                                      bookedRoomData: BookingRoom(
-                                                          parentId: provider
-                                                                  .userData
-                                                                  ?.id ??
-                                                              "",
-                                                          roomId: provider
-                                                              .getRemainingBookedRooms()![
-                                                                  index]
-                                                              .id,
-                                                          babyId: provider
-                                                                  .getRemainingBookedRooms()![
-                                                                      index]
-                                                                  .baby
-                                                                  ?.id ??
-                                                              "",
-                                                          date: provider
-                                                                  .getRemainingBookedRooms()![
-                                                                      index]
-                                                                  .bookingDate ??
-                                                              DateTime.now()),
-                                                    )));
+                                        if (context
+                                                .read<HomePageProvider>()
+                                                .ip !=
+                                            null) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const MonitoringPage(
+                                                          ip: "192.168.1.141")));
+                                        } else {
+                                          ErrorUtils.showMessage(context,
+                                              "Please enter the ip address",
+                                              backgroundColor: Colors.red);
+                                        }
                                       } else {
                                         ErrorUtils.showMessage(context,
-                                            "This is not the time to watch", backgroundColor: Colors.red);
+                                            "This is not the time to watch",
+                                            backgroundColor: Colors.red);
                                       }
                                     },
                                     child: RoomCard(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:nursery/model/user.dart';
 import 'package:nursery/services/auth_store.dart';
-import 'package:nursery/services/notification_service.dart';
 import 'package:nursery/ui/home/book_room_parent/book_room.dart';
 import 'package:nursery/ui/home/home_page_provider.dart';
 import 'package:nursery/ui/home/nursery_dashboard/nursery_dashboard.dart';
@@ -25,17 +24,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-           create: (context) => HomePageProvider(GetIt.I<AuthStore>(), widget.userType),
-        ),
-        ChangeNotifierProvider(
-           create: (context) => NotificationService(GetIt.I<AuthStore>(),widget.userType),
-        )
-      ],
-       
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) =>
+                HomePageProvider(GetIt.I<AuthStore>(), widget.userType),
+          ),
+        ],
         builder: (context, snapshot) {
-          NotificationService notification = context.watch();
           HomePageProvider provider = context.watch();
           return Scaffold(
               appBar: AppBar(

@@ -47,7 +47,7 @@ class ErrorUtils {
       int? animationDuration}) async {
     Flushbar flushBar = Flushbar(
       onTap: (v) => {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const MonitoringPage()))
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const MonitoringPage(ip : "192.168.1.141")))
       },
       flushbarPosition: FlushbarPosition.TOP,
       backgroundColor:

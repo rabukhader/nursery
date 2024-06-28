@@ -8,7 +8,10 @@ import 'package:nursery/utils/formatter.dart';
 
 class BookRomForBabyForm extends StatefulWidget {
   static Future<dynamic> show(
-      {required BuildContext context, required List<Baby> babies, required String roomId, required String userId}) {
+      {required BuildContext context,
+      required List<Baby> babies,
+      required String roomId,
+      required String userId}) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -18,7 +21,8 @@ class BookRomForBabyForm extends StatefulWidget {
         ),
       ),
       clipBehavior: Clip.hardEdge,
-      builder: (context) => BookRomForBabyForm(babies: babies, roomId: roomId, userId: userId),
+      builder: (context) =>
+          BookRomForBabyForm(babies: babies, roomId: roomId, userId: userId),
     );
   }
 
@@ -26,7 +30,11 @@ class BookRomForBabyForm extends StatefulWidget {
   final String roomId;
   final String userId;
 
-  const BookRomForBabyForm({super.key, required this.babies, required this.roomId, required this.userId});
+  const BookRomForBabyForm(
+      {super.key,
+      required this.babies,
+      required this.roomId,
+      required this.userId});
 
   @override
   State<BookRomForBabyForm> createState() => _BookRomForBabyFormState();
@@ -135,9 +143,13 @@ class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
                                   enabled: _validateInput(),
                                   onPressed: () async {
                                     Navigator.pop(
-                                      context,
-                                      BookingRoom(roomId: widget.roomId, babyId: _selectedBaby?.id ?? "", date: _selectedDate!,parentId: widget.userId )
-                                    );
+                                        context,
+                                        BookingRoom(
+                                            roomId: widget.roomId,
+                                            babyId: _selectedBaby?.id ?? "",
+                                            date:
+                                                _selectedDate ?? DateTime.now(),
+                                            parentId: widget.userId));
                                   })),
                         ],
                       ),
@@ -153,7 +165,7 @@ class _BookRomForBabyFormState extends State<BookRomForBabyForm> {
     );
   }
 
-  _validateInput(){
+  _validateInput() {
     return (_selectedBaby != null);
   }
 

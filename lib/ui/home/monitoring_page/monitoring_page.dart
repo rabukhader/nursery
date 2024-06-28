@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
-import 'package:get_it/get_it.dart';
-import 'package:nursery/services/firestore_service.dart';
-import 'package:nursery/ui/home/book_room_parent/book_room_provider.dart';
-import 'package:nursery/ui/home/monitoring_page/monitoring_provider.dart';
-import 'package:nursery/ui/home/widgets/loader.dart';
 import 'package:nursery/utils/colors.dart';
-import 'package:provider/provider.dart';
 
 class MonitoringPage extends StatefulWidget {
-  final BookingRoom? bookedRoomData;
-  const MonitoringPage({super.key, this.bookedRoomData});
+  final String ip;
+  const MonitoringPage({super.key, required this.ip});
 
   @override
   State<MonitoringPage> createState() => _MonitoringPageState();
@@ -23,7 +17,7 @@ class _MonitoringPageState extends State<MonitoringPage> {
   void initState() {
     super.initState();
     _vlcViewController = VlcPlayerController.network(
-      'rtmp://192.168.1.217/live/test', // Replace with your RTMP URL
+      'rtmp://${widget.ip}/live/test', // Replace with your RTMP URL
       autoPlay: true,
       options: VlcPlayerOptions(
         advanced: VlcAdvancedOptions([
@@ -45,18 +39,10 @@ class _MonitoringPageState extends State<MonitoringPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MonitoringProvider(
-        firestore: GetIt.I<FirestoreService>(),
-      ),
-      builder: (context, snapshot) {
-        MonitoringProvider provider = context.watch();
-        return provider.isLoading
-            ? const LoaderWidget()
-            : Scaffold(
+    return Scaffold(
                 appBar: AppBar(
                   backgroundColor: kPrimaryColor,
-                  title: Text("${provider.babyData?.fullname} Monitoring"),
+                  title: const Text("Monitoring"),
                   centerTitle: true,
                 ),
                 body: Center(
@@ -67,7 +53,5 @@ class _MonitoringPageState extends State<MonitoringPage> {
                         const Center(child: CircularProgressIndicator()),
                   ),
                 ));
-      },
-    );
   }
 }
