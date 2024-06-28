@@ -133,13 +133,13 @@ class ProfilePage extends StatelessWidget {
                             endIcon: false,
                             onPress: () async {
                               await provider.logOut();
-                              Navigator.push(
+                              Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           const LoginSignUpPage(
                                             isLogIn: true,
-                                          )));
+                                          )), (route) => false);
                             }),
                       ],
                     ),

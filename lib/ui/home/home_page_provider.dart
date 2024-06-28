@@ -20,6 +20,8 @@ class HomePageProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  bool? _api;
+
   String? _ip;
 
   String? get ip => _ip;
@@ -53,14 +55,14 @@ class HomePageProvider extends ChangeNotifier {
 
   Future _startListening() async {
     await await getIp();
-    while (true) {
+    while (_api == true) {
       await Future.delayed(const Duration(seconds: 5));
       await fetchData();
     }
   }
 
   Future<void> fetchData() async {
-    const url = 'http://192.168.1.141:5000/timestamps';
+    var url = 'http://$_ip:5000/timestamps';
 
     try {
       print("here");
@@ -83,7 +85,8 @@ class HomePageProvider extends ChangeNotifier {
   }
 
   getIp() async {
-    _ip = await showDialog(
+    _api = true;
+    await showDialog(
         context: rootNavigatorKey.currentState!.context,
         builder: (BuildContext context) {
           final TextEditingController ipController = TextEditingController();
@@ -123,12 +126,21 @@ class HomePageProvider extends ChangeNotifier {
                 label: "Change",
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
-                    Navigator.pop(context, ipController.text);
+                    _ip = ipController.text;
+                    Navigator.pop(context);
                   }
                 },
               ),
             ],
           );
         });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _api = false;
+    print(_api);
+    super.dispose();
   }
 }
